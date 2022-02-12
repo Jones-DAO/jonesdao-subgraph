@@ -1,0 +1,38 @@
+specVersion: 0.0.1
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: JonesETHVaultV1
+    network: arbitrum-one
+    source:
+      address: "0x50744d5e6D138ACA596F7D36E659d097BE2d561C"
+      abi: JonesETHVaultV1
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Claimed
+        - DepositFromMultisig
+        - Deposited
+        - OwnershipTransferred
+        - SnapshotBalance
+        - WithdrawalToMultisig
+      abis:
+        - name: JonesETHVaultV1
+          file: ./abis/JonesETHVaultV1.json
+      eventHandlers:
+        - event: Claimed(indexed address,indexed uint256,uint256)
+          handler: handleClaimed
+        - event: DepositFromMultisig(indexed uint256)
+          handler: handleDepositFromMultisig
+        - event: Deposited(indexed address,indexed uint256,uint256)
+          handler: handleDeposited
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: SnapshotBalance(indexed uint256)
+          handler: handleSnapshotBalance
+        - event: WithdrawalToMultisig(indexed uint256)
+          handler: handleWithdrawalToMultisig
+      file: ./src/mapping.ts
