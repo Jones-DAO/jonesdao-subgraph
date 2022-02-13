@@ -1,4 +1,4 @@
-specVersion: 0.0.1
+specVersion: 0.0.2
 schema:
   file: ./schema.graphql
 dataSources:
@@ -8,6 +8,7 @@ dataSources:
     source:
       address: "0x50744d5e6D138ACA596F7D36E659d097BE2d561C"
       abi: JonesETHVaultV1
+      startBlock: 4936079
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -22,6 +23,10 @@ dataSources:
       abis:
         - name: JonesETHVaultV1
           file: ./abis/JonesETHVaultV1.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Pair
+          file: ./abis/UniswapV2Pair.json
       eventHandlers:
         - event: Claimed(indexed address,indexed uint256,uint256)
           handler: handleClaimed
@@ -36,3 +41,99 @@ dataSources:
         - event: WithdrawalToMultisig(indexed uint256)
           handler: handleWithdrawalToMultisig
       file: ./src/mapping.ts
+  - kind: ethereum
+    name: JETHETHSwaps
+    network: arbitrum-one
+    source:
+      address: "0xdf1a6dd4e5b77d7f2143ed73074be26c806754c5"
+      abi: UniswapV2Pair
+      startBlock: 4936079
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Swap
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Pair
+          file: ./abis/UniswapV2Pair.json
+      eventHandlers:
+        - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
+          handler: handleSwap
+      file: ./src/JETH/JETHHandler.ts
+  - kind: ethereum
+    name: JGOHMGOHMSwaps
+    network: arbitrum-one
+    source:
+      address: "0x292d1587a6bb37e34574c9ad5993f221d8a5616c"
+      abi: UniswapV2Pair
+      startBlock: 4936079
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Swap
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Pair
+          file: ./abis/UniswapV2Pair.json
+      eventHandlers:
+        - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
+          handler: handleSwap
+      file: ./src/JGOHM/JGOHMHandler.ts
+  - kind: ethereum
+    name: ETHSSOV
+    network: arbitrum-one
+    source:
+      address: "0x2c9C1E9b4BDf6Bf9CB59C77e0e8C0892cE3A9d5f"
+      abi: ArbEthSSOVV2
+      startBlock: 4936079
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - NewDeposit
+        - NewPurchase
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ArbEthSSOVV2
+          file: ./abis/ArbEthSSOVV2.json
+      eventHandlers:
+        - event: NewDeposit(uint256,uint256,uint256,address,address)
+          handler: handleNewDepositETH
+        - event: NewPurchase(uint256,uint256,uint256,uint256,uint256,address,address)
+          handler: handleNewPurchaseETH
+      file: ./src/SSOV/ETHSSOV/ETHSSOVHandler.ts
+  - kind: ethereum
+    name: GOHMSSOV
+    network: arbitrum-one
+    source:
+      address: "0x54552CB564F4675bCEda644e47dE3E35D1c88E1b"
+      abi: GohmSSOVV2
+      startBlock: 4936079
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - NewDeposit
+        - NewPurchase
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ArbEthSSOVV2
+          file: ./abis/ArbEthSSOVV2.json
+        - name: GohmSSOVV2
+          file: ./abis/GohmSSOVV2.json
+      eventHandlers:
+        - event: NewDeposit(uint256,uint256,uint256,address,address)
+          handler: handleNewDepositGOHM
+        - event: NewPurchase(uint256,uint256,uint256,uint256,uint256,address,address)
+          handler: handleNewPurchaseGOHM
+      file: ./src/SSOV/GOHMSSOV/GOHMSSOVHandler.ts

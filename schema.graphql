@@ -1,6 +1,51 @@
-type ExampleEntity @entity {
+type JETHMetric @entity {
   id: ID!
-  count: BigInt!
-  _from: Bytes! # address
-  _assetAmount: BigInt! # uint256
+  timestamp: BigInt!
+  JETHToETHRatio: BigDecimal!
+  JETHUSDPrice: BigDecimal!
+  ETHUSDPrice: BigDecimal!
+}
+
+type JGOHMMetric @entity {
+  id: ID!
+  timestamp: BigInt!
+  JGOHMToGOHMRatio: BigDecimal!
+  JGOHMUSDPrice: BigDecimal!
+  GOHMUSDPrice: BigDecimal!
+}
+
+type SSOVDeposit @entity {
+  id: ID!
+  timestamp: BigInt!
+  epoch: BigInt!
+  asset: String!
+  strike: BigInt!
+  amount: BigInt!
+  user: Bytes!
+  sender: Bytes!
+}
+
+type SSOVPurchase @entity {
+  id: ID!
+  timestamp: BigInt!
+  epoch: BigInt!
+  asset: String!
+  strike: BigInt!
+  amount: BigInt!
+  fee: BigInt!
+  premium: BigInt!
+  user: Bytes!
+  sender: Bytes!
+}
+
+type SSOVState @entity {
+  id: ID!
+  timestamp: BigInt!
+  epoch: BigInt!
+  asset: String!
+  strikes: [BigInt!]!
+  callsPurchased: [BigInt!]!
+  premiumsPaid: [BigInt!]!
+  deposits: [BigInt!]!
+  user: String!
 }
