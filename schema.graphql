@@ -49,3 +49,15 @@ type SSOVState @entity {
   deposits: [BigInt!]!
   user: String!
 }
+
+type ChainlinkNewRoundHeartbeat @entity {
+  id: ID!
+  timestamp: BigInt!
+  date: String!
+}
+
+type ChainlinkAnswerUpdatedHeartbeat @entity {
+  id: ID!
+  timestamp: BigInt!
+  date: String!
+}

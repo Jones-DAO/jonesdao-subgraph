@@ -500,3 +500,121 @@ export class SSOVState extends Entity {
     this.set("user", Value.fromString(value));
   }
 }
+
+export class ChainlinkNewRoundHeartbeat extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
+    this.set("date", Value.fromString(""));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save ChainlinkNewRoundHeartbeat entity without an ID"
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save ChainlinkNewRoundHeartbeat entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("ChainlinkNewRoundHeartbeat", id.toString(), this);
+    }
+  }
+
+  static load(id: string): ChainlinkNewRoundHeartbeat | null {
+    return changetype<ChainlinkNewRoundHeartbeat | null>(
+      store.get("ChainlinkNewRoundHeartbeat", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get date(): string {
+    let value = this.get("date");
+    return value!.toString();
+  }
+
+  set date(value: string) {
+    this.set("date", Value.fromString(value));
+  }
+}
+
+export class ChainlinkAnswerUpdatedHeartbeat extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
+    this.set("date", Value.fromString(""));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save ChainlinkAnswerUpdatedHeartbeat entity without an ID"
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save ChainlinkAnswerUpdatedHeartbeat entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("ChainlinkAnswerUpdatedHeartbeat", id.toString(), this);
+    }
+  }
+
+  static load(id: string): ChainlinkAnswerUpdatedHeartbeat | null {
+    return changetype<ChainlinkAnswerUpdatedHeartbeat | null>(
+      store.get("ChainlinkAnswerUpdatedHeartbeat", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get date(): string {
+    let value = this.get("date");
+    return value!.toString();
+  }
+
+  set date(value: string) {
+    this.set("date", Value.fromString(value));
+  }
+}

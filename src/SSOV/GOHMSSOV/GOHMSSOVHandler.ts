@@ -1,26 +1,29 @@
 import { GohmSSOVV2 } from "./../../../generated/GOHMSSOV/GohmSSOVV2";
-import { Address, BigInt, ByteArray, Bytes } from "@graphprotocol/graph-ts";
-import { ArbEthSSOVV2, NewDeposit, NewPurchase } from "../../../generated/ETHSSOV/ArbEthSSOVV2";
-import { ASSET_MGMT_MULTISIG, ETH_SSOV_V2, GOMH_SSOV_V2 } from "../../constants";
+import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { NewDeposit, NewPurchase } from "../../../generated/ETHSSOV/ArbEthSSOVV2";
+import { ASSET_MGMT_MULTISIG, GOMH_SSOV_V2 } from "../../constants";
 import { handleNewDeposit, handleNewPurchase } from "../SSOVHandler";
 import { loadOrCreateSSOVStateMetric } from "../SSOVMetric";
-import { bytes } from "@protofire/subgraph-toolkit";
 
 export function handleNewDepositGOHM(event: NewDeposit): void {
-  handleNewDeposit("GOHM", event);
-  updateSSOVState(event.block.timestamp, event.params.user);
-}
-
-export function handleNewPurchaseGOHM(event: NewPurchase): void {
-  handleNewPurchase("GOHM", event);
-  updateSSOVState(event.block.timestamp, event.params.user);
-}
-
-function updateSSOVState(timestamp: BigInt, user: Address): void {
-  if (!user.equals(Address.fromString(ASSET_MGMT_MULTISIG))) {
+  if (!event.params.user.equals(Address.fromString(ASSET_MGMT_MULTISIG))) {
     return;
   }
 
+  updateSSOVState(event.block.timestamp, event.params.user);
+  handleNewDeposit("GOHM", event);
+}
+
+export function handleNewPurchaseGOHM(event: NewPurchase): void {
+  if (!event.params.user.equals(Address.fromString(ASSET_MGMT_MULTISIG))) {
+    return;
+  }
+
+  updateSSOVState(event.block.timestamp, event.params.user);
+  handleNewPurchase("GOHM", event);
+}
+
+function updateSSOVState(timestamp: BigInt, user: Address): void {
   const metric = loadOrCreateSSOVStateMetric(timestamp, "GOHM");
   const ssov = GohmSSOVV2.bind(Address.fromString(GOMH_SSOV_V2));
   const epoch = ssov.currentEpoch();
@@ -48,6 +51,5 @@ function updateSSOVState(timestamp: BigInt, user: Address): void {
     metric.strikes = maybeStrikes.value;
   }
 
-  metric.save();
   metric.save();
 }
