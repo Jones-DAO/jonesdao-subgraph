@@ -77,8 +77,9 @@ export function updateSSOVDepositsState(timestamp: BigInt, asset: string): void 
         metric.userDeposits[i].equals(BigInt.fromString("0"))
       ) {
         newOwnerships.push(BigDecimal.fromString("0"));
+      } else {
+        newOwnerships.push(metric.userDeposits[i].divDecimal(totalDeposit.toBigDecimal()));
       }
-      newOwnerships.push(metric.userDeposits[i].divDecimal(totalDeposit.toBigDecimal()));
     }
 
     metric.ownership = newOwnerships;
@@ -91,9 +92,9 @@ export function updateSSOVDepositsState(timestamp: BigInt, asset: string): void 
         const totalPremium = metric.totalPremiums[i];
         if (totalPremium.equals(BigInt.fromString("0"))) {
           newUserPremiums.push(BigDecimal.fromString("0"));
+        } else {
+          newUserPremiums.push(totalPremium.toBigDecimal().times(metric.ownership[i]));
         }
-
-        newUserPremiums.push(totalPremium.toBigDecimal().times(metric.ownership[i]));
       }
 
       metric.userPremiums = newUserPremiums;
