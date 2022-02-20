@@ -263,6 +263,110 @@ export class SSOVDeposit extends Entity {
   }
 }
 
+export class SSOVPutDeposit extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
+    this.set("epoch", Value.fromBigInt(BigInt.zero()));
+    this.set("asset", Value.fromString(""));
+    this.set("strike", Value.fromBigInt(BigInt.zero()));
+    this.set("amount", Value.fromBigInt(BigInt.zero()));
+    this.set("user", Value.fromBytes(Bytes.empty()));
+    this.set("sender", Value.fromBytes(Bytes.empty()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save SSOVPutDeposit entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save SSOVPutDeposit entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("SSOVPutDeposit", id.toString(), this);
+    }
+  }
+
+  static load(id: string): SSOVPutDeposit | null {
+    return changetype<SSOVPutDeposit | null>(store.get("SSOVPutDeposit", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get epoch(): BigInt {
+    let value = this.get("epoch");
+    return value!.toBigInt();
+  }
+
+  set epoch(value: BigInt) {
+    this.set("epoch", Value.fromBigInt(value));
+  }
+
+  get asset(): string {
+    let value = this.get("asset");
+    return value!.toString();
+  }
+
+  set asset(value: string) {
+    this.set("asset", Value.fromString(value));
+  }
+
+  get strike(): BigInt {
+    let value = this.get("strike");
+    return value!.toBigInt();
+  }
+
+  set strike(value: BigInt) {
+    this.set("strike", Value.fromBigInt(value));
+  }
+
+  get amount(): BigInt {
+    let value = this.get("amount");
+    return value!.toBigInt();
+  }
+
+  set amount(value: BigInt) {
+    this.set("amount", Value.fromBigInt(value));
+  }
+
+  get user(): Bytes {
+    let value = this.get("user");
+    return value!.toBytes();
+  }
+
+  set user(value: Bytes) {
+    this.set("user", Value.fromBytes(value));
+  }
+
+  get sender(): Bytes {
+    let value = this.get("sender");
+    return value!.toBytes();
+  }
+
+  set sender(value: Bytes) {
+    this.set("sender", Value.fromBytes(value));
+  }
+}
+
 export class SSOVDepositsState extends Entity {
   constructor(id: string) {
     super();
@@ -533,6 +637,130 @@ export class SSOVPurchase extends Entity {
   }
 }
 
+export class SSOVPutPurchase extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
+    this.set("epoch", Value.fromBigInt(BigInt.zero()));
+    this.set("asset", Value.fromString(""));
+    this.set("strike", Value.fromBigInt(BigInt.zero()));
+    this.set("amount", Value.fromBigInt(BigInt.zero()));
+    this.set("fee", Value.fromBigInt(BigInt.zero()));
+    this.set("premium", Value.fromBigInt(BigInt.zero()));
+    this.set("user", Value.fromBytes(Bytes.empty()));
+    this.set("sender", Value.fromBytes(Bytes.empty()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save SSOVPutPurchase entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save SSOVPutPurchase entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("SSOVPutPurchase", id.toString(), this);
+    }
+  }
+
+  static load(id: string): SSOVPutPurchase | null {
+    return changetype<SSOVPutPurchase | null>(store.get("SSOVPutPurchase", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get epoch(): BigInt {
+    let value = this.get("epoch");
+    return value!.toBigInt();
+  }
+
+  set epoch(value: BigInt) {
+    this.set("epoch", Value.fromBigInt(value));
+  }
+
+  get asset(): string {
+    let value = this.get("asset");
+    return value!.toString();
+  }
+
+  set asset(value: string) {
+    this.set("asset", Value.fromString(value));
+  }
+
+  get strike(): BigInt {
+    let value = this.get("strike");
+    return value!.toBigInt();
+  }
+
+  set strike(value: BigInt) {
+    this.set("strike", Value.fromBigInt(value));
+  }
+
+  get amount(): BigInt {
+    let value = this.get("amount");
+    return value!.toBigInt();
+  }
+
+  set amount(value: BigInt) {
+    this.set("amount", Value.fromBigInt(value));
+  }
+
+  get fee(): BigInt {
+    let value = this.get("fee");
+    return value!.toBigInt();
+  }
+
+  set fee(value: BigInt) {
+    this.set("fee", Value.fromBigInt(value));
+  }
+
+  get premium(): BigInt {
+    let value = this.get("premium");
+    return value!.toBigInt();
+  }
+
+  set premium(value: BigInt) {
+    this.set("premium", Value.fromBigInt(value));
+  }
+
+  get user(): Bytes {
+    let value = this.get("user");
+    return value!.toBytes();
+  }
+
+  set user(value: Bytes) {
+    this.set("user", Value.fromBytes(value));
+  }
+
+  get sender(): Bytes {
+    let value = this.get("sender");
+    return value!.toBytes();
+  }
+
+  set sender(value: Bytes) {
+    this.set("sender", Value.fromBytes(value));
+  }
+}
+
 export class SSOVPurchasesState extends Entity {
   constructor(id: string) {
     super();
@@ -637,120 +865,6 @@ export class SSOVPurchasesState extends Entity {
 
   set assetPrice(value: BigInt) {
     this.set("assetPrice", Value.fromBigInt(value));
-  }
-
-  get user(): string {
-    let value = this.get("user");
-    return value!.toString();
-  }
-
-  set user(value: string) {
-    this.set("user", Value.fromString(value));
-  }
-}
-
-export class SSOVState extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-
-    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
-    this.set("epoch", Value.fromBigInt(BigInt.zero()));
-    this.set("asset", Value.fromString(""));
-    this.set("strikes", Value.fromBigIntArray(new Array(0)));
-    this.set("callsPurchased", Value.fromBigIntArray(new Array(0)));
-    this.set("premiumsPaid", Value.fromBigIntArray(new Array(0)));
-    this.set("deposits", Value.fromBigIntArray(new Array(0)));
-    this.set("user", Value.fromString(""));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save SSOVState entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        "Cannot save SSOVState entity with non-string ID. " +
-          'Considering using .toHex() to convert the "id" to a string.'
-      );
-      store.set("SSOVState", id.toString(), this);
-    }
-  }
-
-  static load(id: string): SSOVState | null {
-    return changetype<SSOVState | null>(store.get("SSOVState", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get timestamp(): BigInt {
-    let value = this.get("timestamp");
-    return value!.toBigInt();
-  }
-
-  set timestamp(value: BigInt) {
-    this.set("timestamp", Value.fromBigInt(value));
-  }
-
-  get epoch(): BigInt {
-    let value = this.get("epoch");
-    return value!.toBigInt();
-  }
-
-  set epoch(value: BigInt) {
-    this.set("epoch", Value.fromBigInt(value));
-  }
-
-  get asset(): string {
-    let value = this.get("asset");
-    return value!.toString();
-  }
-
-  set asset(value: string) {
-    this.set("asset", Value.fromString(value));
-  }
-
-  get strikes(): Array<BigInt> {
-    let value = this.get("strikes");
-    return value!.toBigIntArray();
-  }
-
-  set strikes(value: Array<BigInt>) {
-    this.set("strikes", Value.fromBigIntArray(value));
-  }
-
-  get callsPurchased(): Array<BigInt> {
-    let value = this.get("callsPurchased");
-    return value!.toBigIntArray();
-  }
-
-  set callsPurchased(value: Array<BigInt>) {
-    this.set("callsPurchased", Value.fromBigIntArray(value));
-  }
-
-  get premiumsPaid(): Array<BigInt> {
-    let value = this.get("premiumsPaid");
-    return value!.toBigIntArray();
-  }
-
-  set premiumsPaid(value: Array<BigInt>) {
-    this.set("premiumsPaid", Value.fromBigIntArray(value));
-  }
-
-  get deposits(): Array<BigInt> {
-    let value = this.get("deposits");
-    return value!.toBigIntArray();
-  }
-
-  set deposits(value: Array<BigInt>) {
-    this.set("deposits", Value.fromBigIntArray(value));
   }
 
   get user(): string {

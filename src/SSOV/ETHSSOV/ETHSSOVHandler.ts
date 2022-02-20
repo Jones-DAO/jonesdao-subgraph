@@ -1,9 +1,15 @@
 import { ArbEthSSOVV2 } from "./../../../generated/GOHMSSOV/ArbEthSSOVV2";
 import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 import { NewDeposit, NewPurchase } from "../../../generated/ETHSSOV/ArbEthSSOVV2";
-import { handleNewDeposit, handleNewPurchase } from "../SSOVHandler";
+import {
+  handleNewDeposit,
+  handleNewPurchase,
+  handlePutDeposit,
+  handlePutPurchase
+} from "../SSOVHandler";
 import { ASSET_MGMT_MULTISIG, ETH_SSOV_V2 } from "../../constants";
 import { loadOrCreateSSOVDepositsStateMetric } from "../SSOVDepositsState";
+import { Deposit, Purchase } from "../../../generated/Curve2PoolSsovPut/Curve2PoolSsovPut";
 
 export function handleNewDepositETH(event: NewDeposit): void {
   updateSSOVDepositsState(event.block.timestamp, "ETH");
@@ -21,6 +27,18 @@ export function handleNewPurchaseETH(event: NewPurchase): void {
   }
 }
 
+export function handlePutPurchaseETH(event: Purchase): void {
+  if (event.params.user.equals(Address.fromString(ASSET_MGMT_MULTISIG))) {
+    handlePutPurchase("ETH", event);
+  }
+}
+
+export function handlePutDepositETH(event: Deposit): void {
+  if (event.params.user.equals(Address.fromString(ASSET_MGMT_MULTISIG))) {
+    handlePutDeposit("ETH", event);
+  }
+}
+
 export function updateSSOVDepositsState(timestamp: BigInt, asset: string): void {
   const metric = loadOrCreateSSOVDepositsStateMetric(timestamp, asset);
 
@@ -28,10 +46,15 @@ export function updateSSOVDepositsState(timestamp: BigInt, asset: string): void 
 
   const ssov = ArbEthSSOVV2.bind(Address.fromString(ETH_SSOV_V2));
   const maybeEpoch = ssov.try_currentEpoch();
-  if (!maybeEpoch.reverted) {
-    metric.epoch = maybeEpoch.value;
+  if (maybeEpoch.reverted) {
+    return;
   }
 
+  if (!maybeEpoch.value.gt(BigInt.fromString("0"))) {
+    return;
+  }
+
+  metric.epoch = maybeEpoch.value;
   const epoch = maybeEpoch.value;
   metric.user = user.toHexString();
   metric.asset = asset;

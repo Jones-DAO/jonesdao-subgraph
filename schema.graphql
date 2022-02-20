@@ -25,6 +25,17 @@ type SSOVDeposit @entity {
   sender: Bytes!
 }
 
+type SSOVPutDeposit @entity {
+  id: ID!
+  timestamp: BigInt!
+  epoch: BigInt!
+  asset: String!
+  strike: BigInt!
+  amount: BigInt!
+  user: Bytes!
+  sender: Bytes!
+}
+
 type SSOVDepositsState @entity {
   id: ID!
   timestamp: BigInt!
@@ -53,6 +64,19 @@ type SSOVPurchase @entity {
   sender: Bytes!
 }
 
+type SSOVPutPurchase @entity {
+  id: ID!
+  timestamp: BigInt!
+  epoch: BigInt!
+  asset: String!
+  strike: BigInt!
+  amount: BigInt!
+  fee: BigInt!
+  premium: BigInt!
+  user: Bytes!
+  sender: Bytes!
+}
+
 type SSOVPurchasesState @entity {
   id: ID!
   timestamp: BigInt!
@@ -62,17 +86,5 @@ type SSOVPurchasesState @entity {
   callsPurchased: [BigInt!]!
   premiumsPaid: [BigInt!]!
   assetPrice: BigInt!
-  user: String!
-}
-
-type SSOVState @entity {
-  id: ID!
-  timestamp: BigInt!
-  epoch: BigInt!
-  asset: String!
-  strikes: [BigInt!]!
-  callsPurchased: [BigInt!]!
-  premiumsPaid: [BigInt!]!
-  deposits: [BigInt!]!
   user: String!
 }
