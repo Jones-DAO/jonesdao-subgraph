@@ -1,59 +1,86 @@
-import { ArbEthSSOVV2 } from "./../../../generated/ETHSSOV/ArbEthSSOVV2";
-import { Address, BigInt, log } from "@graphprotocol/graph-ts";
+import { ArbEthSSOVV2 } from "./../../../generated/GOHMSSOV/ArbEthSSOVV2";
+import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 import { NewDeposit, NewPurchase } from "../../../generated/ETHSSOV/ArbEthSSOVV2";
 import { handleNewDeposit, handleNewPurchase } from "../SSOVHandler";
-import { loadOrCreateSSOVStateMetric } from "../SSOVMetric";
 import { ASSET_MGMT_MULTISIG, ETH_SSOV_V2 } from "../../constants";
+import { loadOrCreateSSOVDepositsStateMetric } from "../SSOVDepositsState";
 
 export function handleNewDepositETH(event: NewDeposit): void {
-  if (!event.params.user.equals(Address.fromString(ASSET_MGMT_MULTISIG))) {
-    return;
-  }
+  updateSSOVDepositsState(event.block.timestamp, "ETH");
 
-  log.warning("Handling deposit ts={}", [event.block.timestamp.toString()]);
-  updateSSOVState(event.block.timestamp, event.params.user);
-  handleNewDeposit("ETH", event);
+  if (event.params.user.equals(Address.fromString(ASSET_MGMT_MULTISIG))) {
+    handleNewDeposit("ETH", event);
+  }
 }
 
 export function handleNewPurchaseETH(event: NewPurchase): void {
-  if (!event.params.user.equals(Address.fromString(ASSET_MGMT_MULTISIG))) {
-    return;
-  }
+  updateSSOVDepositsState(event.block.timestamp, "ETH");
 
-  log.warning("Handling deposit ts={}", [event.block.timestamp.toString()]);
-  updateSSOVState(event.block.timestamp, event.params.user);
-  handleNewPurchase("ETH", event);
+  if (event.params.user.equals(Address.fromString(ASSET_MGMT_MULTISIG))) {
+    handleNewPurchase("ETH", event);
+  }
 }
 
-function updateSSOVState(timestamp: BigInt, user: Address): void {
-  log.warning("Handling state update ts={}", [timestamp.toString()]);
-  const metric = loadOrCreateSSOVStateMetric(timestamp, "ETH");
-  log.warning("State update saved ts={}", [timestamp.toString()]);
+export function updateSSOVDepositsState(timestamp: BigInt, asset: string): void {
+  const metric = loadOrCreateSSOVDepositsStateMetric(timestamp, asset);
+
+  const user = Address.fromString(ASSET_MGMT_MULTISIG);
+
   const ssov = ArbEthSSOVV2.bind(Address.fromString(ETH_SSOV_V2));
-  const epoch = ssov.currentEpoch();
+  const maybeEpoch = ssov.try_currentEpoch();
+  if (!maybeEpoch.reverted) {
+    metric.epoch = maybeEpoch.value;
+  }
 
-  metric.epoch = epoch;
+  const epoch = maybeEpoch.value;
   metric.user = user.toHexString();
-  metric.asset = "ETH";
-
-  const maybeDeposits = ssov.try_getUserEpochDeposits(epoch, user);
-  if (!maybeDeposits.reverted) {
-    metric.deposits = maybeDeposits.value;
-  }
-
-  const maybeCallsPurchased = ssov.try_getUserEpochCallsPurchased(epoch, user);
-  if (!maybeCallsPurchased.reverted) {
-    metric.callsPurchased = maybeCallsPurchased.value;
-  }
-
-  const maybePremiumsPaid = ssov.try_getUserEpochPremium(epoch, user);
-  if (!maybePremiumsPaid.reverted) {
-    metric.premiumsPaid = maybePremiumsPaid.value;
-  }
+  metric.asset = asset;
 
   const maybeStrikes = ssov.try_getEpochStrikes(epoch);
   if (!maybeStrikes.reverted) {
     metric.strikes = maybeStrikes.value;
+  }
+
+  const maybeTotalDeposits = ssov.try_getTotalEpochStrikeDeposits(epoch);
+  const maybeUserDeposits = ssov.try_getUserEpochDeposits(epoch, user);
+
+  if (!maybeTotalDeposits.reverted && !maybeUserDeposits.reverted) {
+    metric.totalDeposits = maybeTotalDeposits.value;
+    metric.userDeposits = maybeUserDeposits.value;
+    const newOwnerships: BigDecimal[] = [];
+    for (let i = 0; i < metric.totalDeposits.length; i++) {
+      const totalDeposit = metric.totalDeposits[i];
+      if (
+        totalDeposit.equals(BigInt.fromString("0")) ||
+        metric.userDeposits[i].equals(BigInt.fromString("0"))
+      ) {
+        newOwnerships.push(BigDecimal.fromString("0"));
+      }
+      newOwnerships.push(metric.userDeposits[i].divDecimal(totalDeposit.toBigDecimal()));
+    }
+
+    metric.ownership = newOwnerships;
+
+    const maybeTotalPremiums = ssov.try_getTotalEpochPremium(epoch);
+    if (!maybeTotalPremiums.reverted) {
+      metric.totalPremiums = maybeTotalPremiums.value;
+      const newUserPremiums: BigDecimal[] = [];
+      for (let i = 0; i < metric.totalPremiums.length; i++) {
+        const totalPremium = metric.totalPremiums[i];
+        if (totalPremium.equals(BigInt.fromString("0"))) {
+          newUserPremiums.push(BigDecimal.fromString("0"));
+        }
+
+        newUserPremiums.push(totalPremium.toBigDecimal().times(metric.ownership[i]));
+      }
+
+      metric.userPremiums = newUserPremiums;
+    }
+  }
+
+  const maybeAssetPrice = ssov.try_getUsdPrice();
+  if (!maybeAssetPrice.reverted) {
+    metric.assetPrice = maybeAssetPrice.value;
   }
 
   metric.save();

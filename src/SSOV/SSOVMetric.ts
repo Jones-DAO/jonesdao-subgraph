@@ -1,11 +1,15 @@
 import { SSOVDeposit, SSOVPurchase, SSOVState } from "../../generated/schema";
-import { BigInt, Bytes } from "@graphprotocol/graph-ts";
+import { BigInt, Bytes, log } from "@graphprotocol/graph-ts";
 
-export function loadOrCreateSSOVDepositMetric(timestamp: BigInt, asset: string): SSOVDeposit {
-  let metric = SSOVDeposit.load(timestamp.toString() + asset);
+export function loadOrCreateSSOVDepositMetric(
+  timestamp: BigInt,
+  asset: string,
+  strike: BigInt
+): SSOVDeposit {
+  let metric = SSOVDeposit.load(timestamp.toString() + asset + strike.toString());
 
   if (metric == null) {
-    metric = new SSOVDeposit(timestamp.toString() + asset);
+    metric = new SSOVDeposit(timestamp.toString() + asset + strike.toString());
     metric.timestamp = timestamp;
     metric.asset = asset;
     metric.epoch = BigInt.fromString("-1");
@@ -24,11 +28,15 @@ export function loadOrCreateSSOVDepositMetric(timestamp: BigInt, asset: string):
   return metric;
 }
 
-export function loadOrCreateSSOVPurchaseMetric(timestamp: BigInt, asset: string): SSOVPurchase {
-  let metric = SSOVPurchase.load(timestamp.toString() + asset);
+export function loadOrCreateSSOVPurchaseMetric(
+  timestamp: BigInt,
+  asset: string,
+  strike: BigInt
+): SSOVPurchase {
+  let metric = SSOVPurchase.load(timestamp.toString() + asset + strike.toString());
 
   if (metric == null) {
-    metric = new SSOVPurchase(timestamp.toString() + asset);
+    metric = new SSOVPurchase(timestamp.toString() + asset + strike.toString());
     metric.timestamp = timestamp;
     metric.asset = asset;
     metric.epoch = BigInt.fromString("-1");

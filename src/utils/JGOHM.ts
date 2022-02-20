@@ -23,6 +23,6 @@ export const getJGOHMToETHRatio = (): BigDecimal => {
   const totJGOHM = toDecimal(reserve0, getJGOHMDecimals());
   const totGOHM = toDecimal(reserve1, getGOHMDecimals());
 
-  const JGOHMToGOHMRatio = totJGOHM.div(totGOHM);
+  const JGOHMToGOHMRatio = totGOHM.div(totJGOHM);
   return JGOHMToGOHMRatio;
 };

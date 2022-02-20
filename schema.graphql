@@ -25,6 +25,21 @@ type SSOVDeposit @entity {
   sender: Bytes!
 }
 
+type SSOVDepositsState @entity {
+  id: ID!
+  timestamp: BigInt!
+  epoch: BigInt!
+  asset: String!
+  strikes: [BigInt!]!
+  ownership: [BigDecimal!]!
+  totalDeposits: [BigInt!]!
+  userDeposits: [BigInt!]!
+  totalPremiums: [BigInt!]!
+  userPremiums: [BigDecimal!]!
+  assetPrice: BigInt!
+  user: String!
+}
+
 type SSOVPurchase @entity {
   id: ID!
   timestamp: BigInt!
@@ -38,6 +53,18 @@ type SSOVPurchase @entity {
   sender: Bytes!
 }
 
+type SSOVPurchasesState @entity {
+  id: ID!
+  timestamp: BigInt!
+  epoch: BigInt!
+  asset: String!
+  strikes: [BigInt!]!
+  callsPurchased: [BigInt!]!
+  premiumsPaid: [BigInt!]!
+  assetPrice: BigInt!
+  user: String!
+}
+
 type SSOVState @entity {
   id: ID!
   timestamp: BigInt!
@@ -48,16 +75,4 @@ type SSOVState @entity {
   premiumsPaid: [BigInt!]!
   deposits: [BigInt!]!
   user: String!
-}
-
-type ChainlinkNewRoundHeartbeat @entity {
-  id: ID!
-  timestamp: BigInt!
-  date: String!
-}
-
-type ChainlinkAnswerUpdatedHeartbeat @entity {
-  id: ID!
-  timestamp: BigInt!
-  date: String!
 }

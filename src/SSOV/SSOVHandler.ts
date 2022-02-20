@@ -2,7 +2,7 @@ import { NewDeposit, NewPurchase } from "../../generated/ETHSSOV/ArbEthSSOVV2";
 import { loadOrCreateSSOVDepositMetric, loadOrCreateSSOVPurchaseMetric } from "./SSOVMetric";
 
 export function handleNewDeposit(asset: string, event: NewDeposit): void {
-  const metric = loadOrCreateSSOVDepositMetric(event.block.timestamp, asset);
+  const metric = loadOrCreateSSOVDepositMetric(event.block.timestamp, asset, event.params.strike);
   metric.epoch = event.params.epoch;
   metric.amount = event.params.amount;
   metric.strike = event.params.strike;
@@ -13,7 +13,7 @@ export function handleNewDeposit(asset: string, event: NewDeposit): void {
 }
 
 export function handleNewPurchase(asset: string, event: NewPurchase): void {
-  const metric = loadOrCreateSSOVPurchaseMetric(event.block.timestamp, asset);
+  const metric = loadOrCreateSSOVPurchaseMetric(event.block.timestamp, asset, event.params.strike);
   metric.epoch = event.params.epoch;
   metric.amount = event.params.amount;
   metric.strike = event.params.strike;

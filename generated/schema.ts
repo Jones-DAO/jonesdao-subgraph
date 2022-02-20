@@ -263,6 +263,152 @@ export class SSOVDeposit extends Entity {
   }
 }
 
+export class SSOVDepositsState extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
+    this.set("epoch", Value.fromBigInt(BigInt.zero()));
+    this.set("asset", Value.fromString(""));
+    this.set("strikes", Value.fromBigIntArray(new Array(0)));
+    this.set("ownership", Value.fromBigDecimalArray(new Array(0)));
+    this.set("totalDeposits", Value.fromBigIntArray(new Array(0)));
+    this.set("userDeposits", Value.fromBigIntArray(new Array(0)));
+    this.set("totalPremiums", Value.fromBigIntArray(new Array(0)));
+    this.set("userPremiums", Value.fromBigDecimalArray(new Array(0)));
+    this.set("assetPrice", Value.fromBigInt(BigInt.zero()));
+    this.set("user", Value.fromString(""));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save SSOVDepositsState entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save SSOVDepositsState entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("SSOVDepositsState", id.toString(), this);
+    }
+  }
+
+  static load(id: string): SSOVDepositsState | null {
+    return changetype<SSOVDepositsState | null>(
+      store.get("SSOVDepositsState", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get epoch(): BigInt {
+    let value = this.get("epoch");
+    return value!.toBigInt();
+  }
+
+  set epoch(value: BigInt) {
+    this.set("epoch", Value.fromBigInt(value));
+  }
+
+  get asset(): string {
+    let value = this.get("asset");
+    return value!.toString();
+  }
+
+  set asset(value: string) {
+    this.set("asset", Value.fromString(value));
+  }
+
+  get strikes(): Array<BigInt> {
+    let value = this.get("strikes");
+    return value!.toBigIntArray();
+  }
+
+  set strikes(value: Array<BigInt>) {
+    this.set("strikes", Value.fromBigIntArray(value));
+  }
+
+  get ownership(): Array<BigDecimal> {
+    let value = this.get("ownership");
+    return value!.toBigDecimalArray();
+  }
+
+  set ownership(value: Array<BigDecimal>) {
+    this.set("ownership", Value.fromBigDecimalArray(value));
+  }
+
+  get totalDeposits(): Array<BigInt> {
+    let value = this.get("totalDeposits");
+    return value!.toBigIntArray();
+  }
+
+  set totalDeposits(value: Array<BigInt>) {
+    this.set("totalDeposits", Value.fromBigIntArray(value));
+  }
+
+  get userDeposits(): Array<BigInt> {
+    let value = this.get("userDeposits");
+    return value!.toBigIntArray();
+  }
+
+  set userDeposits(value: Array<BigInt>) {
+    this.set("userDeposits", Value.fromBigIntArray(value));
+  }
+
+  get totalPremiums(): Array<BigInt> {
+    let value = this.get("totalPremiums");
+    return value!.toBigIntArray();
+  }
+
+  set totalPremiums(value: Array<BigInt>) {
+    this.set("totalPremiums", Value.fromBigIntArray(value));
+  }
+
+  get userPremiums(): Array<BigDecimal> {
+    let value = this.get("userPremiums");
+    return value!.toBigDecimalArray();
+  }
+
+  set userPremiums(value: Array<BigDecimal>) {
+    this.set("userPremiums", Value.fromBigDecimalArray(value));
+  }
+
+  get assetPrice(): BigInt {
+    let value = this.get("assetPrice");
+    return value!.toBigInt();
+  }
+
+  set assetPrice(value: BigInt) {
+    this.set("assetPrice", Value.fromBigInt(value));
+  }
+
+  get user(): string {
+    let value = this.get("user");
+    return value!.toString();
+  }
+
+  set user(value: string) {
+    this.set("user", Value.fromString(value));
+  }
+}
+
 export class SSOVPurchase extends Entity {
   constructor(id: string) {
     super();
@@ -387,6 +533,122 @@ export class SSOVPurchase extends Entity {
   }
 }
 
+export class SSOVPurchasesState extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
+    this.set("epoch", Value.fromBigInt(BigInt.zero()));
+    this.set("asset", Value.fromString(""));
+    this.set("strikes", Value.fromBigIntArray(new Array(0)));
+    this.set("callsPurchased", Value.fromBigIntArray(new Array(0)));
+    this.set("premiumsPaid", Value.fromBigIntArray(new Array(0)));
+    this.set("assetPrice", Value.fromBigInt(BigInt.zero()));
+    this.set("user", Value.fromString(""));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save SSOVPurchasesState entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save SSOVPurchasesState entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("SSOVPurchasesState", id.toString(), this);
+    }
+  }
+
+  static load(id: string): SSOVPurchasesState | null {
+    return changetype<SSOVPurchasesState | null>(
+      store.get("SSOVPurchasesState", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get epoch(): BigInt {
+    let value = this.get("epoch");
+    return value!.toBigInt();
+  }
+
+  set epoch(value: BigInt) {
+    this.set("epoch", Value.fromBigInt(value));
+  }
+
+  get asset(): string {
+    let value = this.get("asset");
+    return value!.toString();
+  }
+
+  set asset(value: string) {
+    this.set("asset", Value.fromString(value));
+  }
+
+  get strikes(): Array<BigInt> {
+    let value = this.get("strikes");
+    return value!.toBigIntArray();
+  }
+
+  set strikes(value: Array<BigInt>) {
+    this.set("strikes", Value.fromBigIntArray(value));
+  }
+
+  get callsPurchased(): Array<BigInt> {
+    let value = this.get("callsPurchased");
+    return value!.toBigIntArray();
+  }
+
+  set callsPurchased(value: Array<BigInt>) {
+    this.set("callsPurchased", Value.fromBigIntArray(value));
+  }
+
+  get premiumsPaid(): Array<BigInt> {
+    let value = this.get("premiumsPaid");
+    return value!.toBigIntArray();
+  }
+
+  set premiumsPaid(value: Array<BigInt>) {
+    this.set("premiumsPaid", Value.fromBigIntArray(value));
+  }
+
+  get assetPrice(): BigInt {
+    let value = this.get("assetPrice");
+    return value!.toBigInt();
+  }
+
+  set assetPrice(value: BigInt) {
+    this.set("assetPrice", Value.fromBigInt(value));
+  }
+
+  get user(): string {
+    let value = this.get("user");
+    return value!.toString();
+  }
+
+  set user(value: string) {
+    this.set("user", Value.fromString(value));
+  }
+}
+
 export class SSOVState extends Entity {
   constructor(id: string) {
     super();
@@ -498,123 +760,5 @@ export class SSOVState extends Entity {
 
   set user(value: string) {
     this.set("user", Value.fromString(value));
-  }
-}
-
-export class ChainlinkNewRoundHeartbeat extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-
-    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
-    this.set("date", Value.fromString(""));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(
-      id != null,
-      "Cannot save ChainlinkNewRoundHeartbeat entity without an ID"
-    );
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        "Cannot save ChainlinkNewRoundHeartbeat entity with non-string ID. " +
-          'Considering using .toHex() to convert the "id" to a string.'
-      );
-      store.set("ChainlinkNewRoundHeartbeat", id.toString(), this);
-    }
-  }
-
-  static load(id: string): ChainlinkNewRoundHeartbeat | null {
-    return changetype<ChainlinkNewRoundHeartbeat | null>(
-      store.get("ChainlinkNewRoundHeartbeat", id)
-    );
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get timestamp(): BigInt {
-    let value = this.get("timestamp");
-    return value!.toBigInt();
-  }
-
-  set timestamp(value: BigInt) {
-    this.set("timestamp", Value.fromBigInt(value));
-  }
-
-  get date(): string {
-    let value = this.get("date");
-    return value!.toString();
-  }
-
-  set date(value: string) {
-    this.set("date", Value.fromString(value));
-  }
-}
-
-export class ChainlinkAnswerUpdatedHeartbeat extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-
-    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
-    this.set("date", Value.fromString(""));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(
-      id != null,
-      "Cannot save ChainlinkAnswerUpdatedHeartbeat entity without an ID"
-    );
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        "Cannot save ChainlinkAnswerUpdatedHeartbeat entity with non-string ID. " +
-          'Considering using .toHex() to convert the "id" to a string.'
-      );
-      store.set("ChainlinkAnswerUpdatedHeartbeat", id.toString(), this);
-    }
-  }
-
-  static load(id: string): ChainlinkAnswerUpdatedHeartbeat | null {
-    return changetype<ChainlinkAnswerUpdatedHeartbeat | null>(
-      store.get("ChainlinkAnswerUpdatedHeartbeat", id)
-    );
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get timestamp(): BigInt {
-    let value = this.get("timestamp");
-    return value!.toBigInt();
-  }
-
-  set timestamp(value: BigInt) {
-    this.set("timestamp", Value.fromBigInt(value));
-  }
-
-  get date(): string {
-    let value = this.get("date");
-    return value!.toString();
-  }
-
-  set date(value: string) {
-    this.set("date", Value.fromString(value));
   }
 }
