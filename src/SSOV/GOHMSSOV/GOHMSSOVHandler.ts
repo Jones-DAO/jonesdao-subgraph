@@ -12,19 +12,18 @@ import {
 import { Deposit, Purchase } from "../../../generated/Curve2PoolSsovPut/Curve2PoolSsovPut";
 
 export function handleNewDepositGOHM(event: NewDeposit): void {
-  updateSSOVDepositsState(event.block.timestamp, "GOHM");
-
   if (event.params.user.equals(Address.fromString(ASSET_MGMT_MULTISIG))) {
     handleNewDeposit("GOHM", event);
+    updateSSOVDepositsState(event.block.timestamp, "GOHM");
   }
 }
 
 export function handleNewPurchaseGOHM(event: NewPurchase): void {
-  updateSSOVDepositsState(event.block.timestamp, "GOHM");
-
   if (event.params.user.equals(Address.fromString(ASSET_MGMT_MULTISIG))) {
     handleNewPurchase("GOHM", event);
   }
+
+  updateSSOVDepositsState(event.block.timestamp, "GOHM");
 }
 
 export function handlePutPurchaseGOHM(event: Purchase): void {

@@ -12,19 +12,18 @@ import { loadOrCreateSSOVDepositsStateMetric } from "../SSOVDepositsState";
 import { Deposit, Purchase } from "../../../generated/Curve2PoolSsovPut/Curve2PoolSsovPut";
 
 export function handleNewDepositETH(event: NewDeposit): void {
-  updateSSOVDepositsState(event.block.timestamp, "ETH");
-
   if (event.params.user.equals(Address.fromString(ASSET_MGMT_MULTISIG))) {
     handleNewDeposit("ETH", event);
+    updateSSOVDepositsState(event.block.timestamp, "ETH");
   }
 }
 
 export function handleNewPurchaseETH(event: NewPurchase): void {
-  updateSSOVDepositsState(event.block.timestamp, "ETH");
-
   if (event.params.user.equals(Address.fromString(ASSET_MGMT_MULTISIG))) {
     handleNewPurchase("ETH", event);
   }
+
+  updateSSOVDepositsState(event.block.timestamp, "ETH");
 }
 
 export function handlePutPurchaseETH(event: Purchase): void {
