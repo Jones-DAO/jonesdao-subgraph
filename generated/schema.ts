@@ -159,6 +159,90 @@ export class JGOHMMetric extends Entity {
   }
 }
 
+export class JAssetMetric extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
+    this.set("asset", Value.fromString(""));
+    this.set("JAssetToAssetRatio", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("JAssetPrice", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("AssetPrice", Value.fromBigDecimal(BigDecimal.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save JAssetMetric entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save JAssetMetric entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("JAssetMetric", id.toString(), this);
+    }
+  }
+
+  static load(id: string): JAssetMetric | null {
+    return changetype<JAssetMetric | null>(store.get("JAssetMetric", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get asset(): string {
+    let value = this.get("asset");
+    return value!.toString();
+  }
+
+  set asset(value: string) {
+    this.set("asset", Value.fromString(value));
+  }
+
+  get JAssetToAssetRatio(): BigDecimal {
+    let value = this.get("JAssetToAssetRatio");
+    return value!.toBigDecimal();
+  }
+
+  set JAssetToAssetRatio(value: BigDecimal) {
+    this.set("JAssetToAssetRatio", Value.fromBigDecimal(value));
+  }
+
+  get JAssetPrice(): BigDecimal {
+    let value = this.get("JAssetPrice");
+    return value!.toBigDecimal();
+  }
+
+  set JAssetPrice(value: BigDecimal) {
+    this.set("JAssetPrice", Value.fromBigDecimal(value));
+  }
+
+  get AssetPrice(): BigDecimal {
+    let value = this.get("AssetPrice");
+    return value!.toBigDecimal();
+  }
+
+  set AssetPrice(value: BigDecimal) {
+    this.set("AssetPrice", Value.fromBigDecimal(value));
+  }
+}
+
 export class SSOVDeposit extends Entity {
   constructor(id: string) {
     super();
@@ -375,13 +459,13 @@ export class SSOVDepositsState extends Entity {
     this.set("timestamp", Value.fromBigInt(BigInt.zero()));
     this.set("epoch", Value.fromBigInt(BigInt.zero()));
     this.set("asset", Value.fromString(""));
-    this.set("strikes", Value.fromBigIntArray(new Array(0)));
+    this.set("strikes", Value.fromBigDecimalArray(new Array(0)));
     this.set("ownership", Value.fromBigDecimalArray(new Array(0)));
-    this.set("totalDeposits", Value.fromBigIntArray(new Array(0)));
-    this.set("userDeposits", Value.fromBigIntArray(new Array(0)));
-    this.set("totalPremiums", Value.fromBigIntArray(new Array(0)));
+    this.set("totalDeposits", Value.fromBigDecimalArray(new Array(0)));
+    this.set("userDeposits", Value.fromBigDecimalArray(new Array(0)));
+    this.set("totalPremiums", Value.fromBigDecimalArray(new Array(0)));
     this.set("userPremiums", Value.fromBigDecimalArray(new Array(0)));
-    this.set("assetPrice", Value.fromBigInt(BigInt.zero()));
+    this.set("assetPrice", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("user", Value.fromString(""));
   }
 
@@ -440,13 +524,13 @@ export class SSOVDepositsState extends Entity {
     this.set("asset", Value.fromString(value));
   }
 
-  get strikes(): Array<BigInt> {
+  get strikes(): Array<BigDecimal> {
     let value = this.get("strikes");
-    return value!.toBigIntArray();
+    return value!.toBigDecimalArray();
   }
 
-  set strikes(value: Array<BigInt>) {
-    this.set("strikes", Value.fromBigIntArray(value));
+  set strikes(value: Array<BigDecimal>) {
+    this.set("strikes", Value.fromBigDecimalArray(value));
   }
 
   get ownership(): Array<BigDecimal> {
@@ -458,31 +542,31 @@ export class SSOVDepositsState extends Entity {
     this.set("ownership", Value.fromBigDecimalArray(value));
   }
 
-  get totalDeposits(): Array<BigInt> {
+  get totalDeposits(): Array<BigDecimal> {
     let value = this.get("totalDeposits");
-    return value!.toBigIntArray();
+    return value!.toBigDecimalArray();
   }
 
-  set totalDeposits(value: Array<BigInt>) {
-    this.set("totalDeposits", Value.fromBigIntArray(value));
+  set totalDeposits(value: Array<BigDecimal>) {
+    this.set("totalDeposits", Value.fromBigDecimalArray(value));
   }
 
-  get userDeposits(): Array<BigInt> {
+  get userDeposits(): Array<BigDecimal> {
     let value = this.get("userDeposits");
-    return value!.toBigIntArray();
+    return value!.toBigDecimalArray();
   }
 
-  set userDeposits(value: Array<BigInt>) {
-    this.set("userDeposits", Value.fromBigIntArray(value));
+  set userDeposits(value: Array<BigDecimal>) {
+    this.set("userDeposits", Value.fromBigDecimalArray(value));
   }
 
-  get totalPremiums(): Array<BigInt> {
+  get totalPremiums(): Array<BigDecimal> {
     let value = this.get("totalPremiums");
-    return value!.toBigIntArray();
+    return value!.toBigDecimalArray();
   }
 
-  set totalPremiums(value: Array<BigInt>) {
-    this.set("totalPremiums", Value.fromBigIntArray(value));
+  set totalPremiums(value: Array<BigDecimal>) {
+    this.set("totalPremiums", Value.fromBigDecimalArray(value));
   }
 
   get userPremiums(): Array<BigDecimal> {
@@ -494,13 +578,13 @@ export class SSOVDepositsState extends Entity {
     this.set("userPremiums", Value.fromBigDecimalArray(value));
   }
 
-  get assetPrice(): BigInt {
+  get assetPrice(): BigDecimal {
     let value = this.get("assetPrice");
-    return value!.toBigInt();
+    return value!.toBigDecimal();
   }
 
-  set assetPrice(value: BigInt) {
-    this.set("assetPrice", Value.fromBigInt(value));
+  set assetPrice(value: BigDecimal) {
+    this.set("assetPrice", Value.fromBigDecimal(value));
   }
 
   get user(): string {
@@ -769,10 +853,10 @@ export class SSOVPurchasesState extends Entity {
     this.set("timestamp", Value.fromBigInt(BigInt.zero()));
     this.set("epoch", Value.fromBigInt(BigInt.zero()));
     this.set("asset", Value.fromString(""));
-    this.set("strikes", Value.fromBigIntArray(new Array(0)));
-    this.set("callsPurchased", Value.fromBigIntArray(new Array(0)));
-    this.set("premiumsPaid", Value.fromBigIntArray(new Array(0)));
-    this.set("assetPrice", Value.fromBigInt(BigInt.zero()));
+    this.set("strikes", Value.fromBigDecimalArray(new Array(0)));
+    this.set("callsPurchased", Value.fromBigDecimalArray(new Array(0)));
+    this.set("premiumsPaid", Value.fromBigDecimalArray(new Array(0)));
+    this.set("assetPrice", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("user", Value.fromString(""));
   }
 
@@ -831,40 +915,40 @@ export class SSOVPurchasesState extends Entity {
     this.set("asset", Value.fromString(value));
   }
 
-  get strikes(): Array<BigInt> {
+  get strikes(): Array<BigDecimal> {
     let value = this.get("strikes");
-    return value!.toBigIntArray();
+    return value!.toBigDecimalArray();
   }
 
-  set strikes(value: Array<BigInt>) {
-    this.set("strikes", Value.fromBigIntArray(value));
+  set strikes(value: Array<BigDecimal>) {
+    this.set("strikes", Value.fromBigDecimalArray(value));
   }
 
-  get callsPurchased(): Array<BigInt> {
+  get callsPurchased(): Array<BigDecimal> {
     let value = this.get("callsPurchased");
-    return value!.toBigIntArray();
+    return value!.toBigDecimalArray();
   }
 
-  set callsPurchased(value: Array<BigInt>) {
-    this.set("callsPurchased", Value.fromBigIntArray(value));
+  set callsPurchased(value: Array<BigDecimal>) {
+    this.set("callsPurchased", Value.fromBigDecimalArray(value));
   }
 
-  get premiumsPaid(): Array<BigInt> {
+  get premiumsPaid(): Array<BigDecimal> {
     let value = this.get("premiumsPaid");
-    return value!.toBigIntArray();
+    return value!.toBigDecimalArray();
   }
 
-  set premiumsPaid(value: Array<BigInt>) {
-    this.set("premiumsPaid", Value.fromBigIntArray(value));
+  set premiumsPaid(value: Array<BigDecimal>) {
+    this.set("premiumsPaid", Value.fromBigDecimalArray(value));
   }
 
-  get assetPrice(): BigInt {
+  get assetPrice(): BigDecimal {
     let value = this.get("assetPrice");
-    return value!.toBigInt();
+    return value!.toBigDecimal();
   }
 
-  set assetPrice(value: BigInt) {
-    this.set("assetPrice", Value.fromBigInt(value));
+  set assetPrice(value: BigDecimal) {
+    this.set("assetPrice", Value.fromBigDecimal(value));
   }
 
   get user(): string {
@@ -874,5 +958,49 @@ export class SSOVPurchasesState extends Entity {
 
   set user(value: string) {
     this.set("user", Value.fromString(value));
+  }
+}
+
+export class Heartbeat extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Heartbeat entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save Heartbeat entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("Heartbeat", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Heartbeat | null {
+    return changetype<Heartbeat | null>(store.get("Heartbeat", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
   }
 }

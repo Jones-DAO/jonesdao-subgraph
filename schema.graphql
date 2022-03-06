@@ -14,6 +14,15 @@ type JGOHMMetric @entity {
   GOHMUSDPrice: BigDecimal!
 }
 
+type JAssetMetric @entity {
+  id: ID!
+  timestamp: BigInt!
+  asset: String!
+  JAssetToAssetRatio: BigDecimal!
+  JAssetPrice: BigDecimal!
+  AssetPrice: BigDecimal!
+}
+
 type SSOVDeposit @entity {
   id: ID!
   timestamp: BigInt!
@@ -41,13 +50,13 @@ type SSOVDepositsState @entity {
   timestamp: BigInt!
   epoch: BigInt!
   asset: String!
-  strikes: [BigInt!]!
+  strikes: [BigDecimal!]!
   ownership: [BigDecimal!]!
-  totalDeposits: [BigInt!]!
-  userDeposits: [BigInt!]!
-  totalPremiums: [BigInt!]!
+  totalDeposits: [BigDecimal!]!
+  userDeposits: [BigDecimal!]!
+  totalPremiums: [BigDecimal!]!
   userPremiums: [BigDecimal!]!
-  assetPrice: BigInt!
+  assetPrice: BigDecimal!
   user: String!
 }
 
@@ -82,9 +91,15 @@ type SSOVPurchasesState @entity {
   timestamp: BigInt!
   epoch: BigInt!
   asset: String!
-  strikes: [BigInt!]!
-  callsPurchased: [BigInt!]!
-  premiumsPaid: [BigInt!]!
-  assetPrice: BigInt!
+  strikes: [BigDecimal!]!
+  callsPurchased: [BigDecimal!]!
+  premiumsPaid: [BigDecimal!]!
+  assetPrice: BigDecimal!
   user: String!
+}
+
+# Just a helper to keep track of latest heartbeats
+type Heartbeat @entity {
+  id: ID! # e.g. 2019-01-01T03
+  timestamp: BigInt!
 }

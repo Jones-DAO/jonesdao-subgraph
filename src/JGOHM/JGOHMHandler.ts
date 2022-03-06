@@ -3,7 +3,7 @@ import { getJGOHMToETHRatio } from "../utils/JGOHM";
 import { Swap } from "../../generated/JonesETHVaultV1/UniswapV2Pair";
 import { getGOHMPrice } from "../utils/GOHM";
 import { loadOrCreateJGOHMMetric } from "./JGOHMMetric";
-import { BigDecimal } from "@graphprotocol/graph-ts";
+import { BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 import { timestampToISOHourString } from "../utils/Date";
 
 export function handleSwap(event: Swap): void {
@@ -20,5 +20,13 @@ export function handleSwap(event: Swap): void {
   metric.JGOHMToGOHMRatio = getJGOHMToETHRatio();
   metric.JGOHMUSDPrice = metric.GOHMUSDPrice.times(metric.JGOHMToGOHMRatio);
 
+  metric.save();
+}
+
+export function collectJGOHMData(dateStr: string, timestamp: BigInt): void {
+  let metric = loadOrCreateJGOHMMetric(dateStr, timestamp);
+  metric.GOHMUSDPrice = getGOHMPrice();
+  metric.JGOHMToGOHMRatio = getJGOHMToETHRatio();
+  metric.JGOHMUSDPrice = metric.JGOHMUSDPrice.times(metric.JGOHMToGOHMRatio);
   metric.save();
 }

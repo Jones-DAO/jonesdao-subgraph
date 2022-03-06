@@ -4,6 +4,7 @@ import { BigInt, Bytes } from "@graphprotocol/graph-ts";
 export function loadOrCreateSSOVDepositMetric(
   timestamp: BigInt,
   asset: string,
+  dateStr: string,
   strike: BigInt
 ): SSOVDeposit {
   let metric = SSOVDeposit.load(timestamp.toString() + asset + strike.toString());
@@ -19,10 +20,6 @@ export function loadOrCreateSSOVDepositMetric(
     metric.sender = Bytes.empty();
 
     metric.save();
-  } else {
-    metric.timestamp = timestamp;
-    metric.asset = asset;
-    metric.save();
   }
 
   return metric;
@@ -31,6 +28,7 @@ export function loadOrCreateSSOVDepositMetric(
 export function loadOrCreateSSOVPurchaseMetric(
   timestamp: BigInt,
   asset: string,
+  dateStr: string,
   strike: BigInt
 ): SSOVPurchase {
   let metric = SSOVPurchase.load(timestamp.toString() + asset + strike.toString());
@@ -48,10 +46,6 @@ export function loadOrCreateSSOVPurchaseMetric(
     metric.sender = Bytes.empty();
 
     metric.save();
-  } else {
-    metric.timestamp = timestamp;
-    metric.asset = asset;
-    metric.save();
   }
 
   return metric;
@@ -60,6 +54,7 @@ export function loadOrCreateSSOVPurchaseMetric(
 export function loadOrCreateSSOVPutDepositMetric(
   timestamp: BigInt,
   asset: string,
+  dateStr: string,
   strike: BigInt
 ): SSOVPutDeposit {
   let metric = SSOVPutDeposit.load(timestamp.toString() + asset + strike.toString());
@@ -75,10 +70,6 @@ export function loadOrCreateSSOVPutDepositMetric(
     metric.sender = Bytes.empty();
 
     metric.save();
-  } else {
-    metric.timestamp = timestamp;
-    metric.asset = asset;
-    metric.save();
   }
 
   return metric;
@@ -87,6 +78,7 @@ export function loadOrCreateSSOVPutDepositMetric(
 export function loadOrCreateSSOVPutPurchaseMetric(
   timestamp: BigInt,
   asset: string,
+  dateStr: string,
   strike: BigInt
 ): SSOVPutPurchase {
   let metric = SSOVPutPurchase.load(timestamp.toString() + asset + strike.toString());
@@ -103,10 +95,6 @@ export function loadOrCreateSSOVPutPurchaseMetric(
     metric.user = Bytes.empty();
     metric.sender = Bytes.empty();
 
-    metric.save();
-  } else {
-    metric.timestamp = timestamp;
-    metric.asset = asset;
     metric.save();
   }
 

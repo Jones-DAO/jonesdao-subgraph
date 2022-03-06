@@ -2,7 +2,7 @@ import { getJETHToETHRatio } from "./../utils/JETH";
 import { Swap } from "../../generated/JonesETHVaultV1/UniswapV2Pair";
 import { getWETHPrice } from "../utils/WETH";
 import { loadOrCreateJETHMetric } from "./JETHMetric";
-import { BigDecimal } from "@graphprotocol/graph-ts";
+import { BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 import { timestampToISOHourString } from "../utils/Date";
 
 export function handleSwap(event: Swap): void {
@@ -19,5 +19,13 @@ export function handleSwap(event: Swap): void {
   metric.JETHToETHRatio = getJETHToETHRatio();
   metric.JETHUSDPrice = metric.ETHUSDPrice.times(metric.JETHToETHRatio);
 
+  metric.save();
+}
+
+export function collectJETHData(dateStr: string, timestamp: BigInt): void {
+  let metric = loadOrCreateJETHMetric(dateStr, timestamp);
+  metric.ETHUSDPrice = getWETHPrice();
+  metric.JETHToETHRatio = getJETHToETHRatio();
+  metric.JETHUSDPrice = metric.ETHUSDPrice.times(metric.JETHToETHRatio);
   metric.save();
 }
