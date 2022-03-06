@@ -105,7 +105,6 @@ export const getJAssetRatioFromLP = (asset: string): BigDecimal => {
   const decimals = assetToDecimals(asset);
 
   const jAssetAssetLPFlipped = asset === "DPX";
-  log.warning("asset {} flipped {}", [asset, jAssetAssetLPFlipped.toString()]);
 
   const pairContract = UniswapV2Pair.bind(Address.fromString(jAssetAssetLP));
 
