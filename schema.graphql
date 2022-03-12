@@ -53,6 +53,11 @@ type SSOVDepositsState @entity {
   strikes: [BigDecimal!]!
   ownership: [BigDecimal!]!
   totalDeposits: [BigDecimal!]!
+  summedTotalDeposits: BigDecimal!
+  summedUserDeposits: BigDecimal!
+  summedOwnership: BigDecimal!
+  totalFarmRewards: BigDecimal!
+  userFarmRewards: BigDecimal!
   userDeposits: [BigDecimal!]!
   totalPremiums: [BigDecimal!]!
   userPremiums: [BigDecimal!]!
@@ -102,4 +107,47 @@ type SSOVPurchasesState @entity {
 type Heartbeat @entity {
   id: ID! # e.g. 2019-01-01T03
   timestamp: BigInt!
+}
+
+type ETHBalance @entity {
+  id: ID!
+  balance: BigDecimal!
+}
+
+type ETHSSOVDeposit @entity {
+  id: ID!
+  timestamp: BigInt!
+  epoch: BigInt!
+  strikeIndex: BigInt!
+  amount: BigDecimal!
+}
+
+type ETHSSOVCallPurchase @entity {
+  id: ID!
+  timestamp: BigInt!
+  epoch: BigInt!
+  strikeIndex: BigInt!
+  amount: BigDecimal!
+  premium: BigDecimal!
+  totalFee: BigDecimal!
+}
+
+type ETHEpochStarted @entity {
+  id: ID!
+  timestamp: BigInt!
+  epoch: BigInt!
+  amount: BigDecimal!
+  jAssetAmount: BigDecimal!
+}
+
+type JonesVaultPnL @entity {
+  id: ID!
+  asset: String!
+  pnlPercentage: BigDecimal!
+  pnlUnderlying: BigDecimal!
+  depositPnl: BigDecimal!
+  purchasePnl: BigDecimal!
+  farmPnl: BigDecimal!
+  depositedAssets: BigDecimal!
+  currentAssets: BigDecimal!
 }

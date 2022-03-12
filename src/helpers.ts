@@ -1,3 +1,4 @@
+import { ERC20 } from "./../generated/JonesETHVaultV1/ERC20";
 import { UniswapV2Pair } from "./../generated/JonesETHVaultV1/UniswapV2Pair";
 import { ArbEthSSOVV2 } from "./../generated/ETHSSOV/ArbEthSSOVV2";
 import { Address, bigDecimal, BigDecimal, BigInt, log } from "@graphprotocol/graph-ts";
@@ -13,7 +14,9 @@ import {
   GOHM_SSOV_V2,
   JETHETH_SUSHI_PAIR,
   JGOHMGOHM_SUSHI_PAIR,
-  DPXJDPX_SUSHI_PAIR
+  DPXJDPX_SUSHI_PAIR,
+  GOHM,
+  DPX
 } from "./constants";
 import { toDecimal } from "./utils/Decimals";
 
@@ -28,6 +31,16 @@ export const assetToJonesVaultV2 = (asset: string): string => {
     return JONES_GOHM_VAULT_V2;
   } else if (asset === "DPX") {
     return JONES_DPX_VAULT_V2;
+  } else {
+    return "";
+  }
+};
+
+export const assetToTokenAddr = (asset: string): string => {
+  if (asset === "GOHM") {
+    return GOHM;
+  } else if (asset === "DPX") {
+    return DPX;
   } else {
     return "";
   }
@@ -140,4 +153,22 @@ export const bigIntListToBigDecimalList = (list: BigInt[], decimals: number): Bi
   }
 
   return newList;
+};
+
+/**
+ * Please note that this does not work for ETH.
+ * The graph does not read ETH-native data, only contract data.
+ * ETH balance is read as a function of all previous deposits and withdrawals.
+ * @param asset
+ * @returns
+ */
+export const getVaultBalanceOf = (asset: string): BigDecimal => {
+  const vaultAddr = assetToJonesVaultV2(asset);
+  const vault = Address.fromString(vaultAddr);
+
+  // we read the ERC20
+  const tokenAddr = assetToTokenAddr(asset);
+  const token = ERC20.bind(Address.fromString(tokenAddr));
+  const vaultBalance = token.balanceOf(vault);
+  return toDecimal(vaultBalance, assetToDecimals(asset));
 };

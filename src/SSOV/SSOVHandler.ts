@@ -12,63 +12,10 @@ import { loadOrCreateSSOVDepositsStateMetric } from "./SSOVDepositsState";
 import { assetToDecimals, assetToSSOVC, bigIntListToBigDecimalList } from "../helpers";
 import { loadOrCreateSSOVPurchasesStateMetric } from "./SSOVPurchasesState";
 import { toDecimal } from "../utils/Decimals";
-//import { Asset } from "../types";
+import { getEarningsFromDPXFarm } from "../Farms/DPXFarm";
+import { DPX_SSOV_V2 } from "../constants";
 
-// export function handleNewDeposit(asset: string, event: NewDeposit): void {
-//   const metric = loadOrCreateSSOVDepositMetric(event.block.timestamp, asset, event.params.strike);
-//   metric.epoch = event.params.epoch;
-//   metric.amount = event.params.amount;
-//   metric.strike = event.params.strike;
-//   metric.sender = event.params.sender;
-//   metric.user = event.params.user;
-
-//   metric.save();
-// }
-
-// export function handleNewPurchase(asset: string, event: NewPurchase): void {
-//   const metric = loadOrCreateSSOVPurchaseMetric(event.block.timestamp, asset, event.params.strike);
-//   metric.epoch = event.params.epoch;
-//   metric.amount = event.params.amount;
-//   metric.strike = event.params.strike;
-//   metric.fee = event.params.fee;
-//   metric.premium = event.params.premium;
-//   metric.sender = event.params.sender;
-//   metric.user = event.params.user;
-
-//   metric.save();
-// }
-
-// export function handlePutDeposit(asset: string, event: Deposit): void {
-//   const metric = loadOrCreateSSOVPutDepositMetric(
-//     event.block.timestamp,
-//     asset,
-//     event.params.strike
-//   );
-//   metric.epoch = event.params.epoch;
-//   metric.amount = event.params.amount;
-//   metric.strike = event.params.strike;
-//   metric.sender = event.params.sender;
-//   metric.user = event.params.user;
-
-//   metric.save();
-// }
-
-// export function handlePutPurchase(asset: string, event: Purchase): void {
-//   const metric = loadOrCreateSSOVPutPurchaseMetric(
-//     event.block.timestamp,
-//     asset,
-//     event.params.strike
-//   );
-//   metric.epoch = event.params.epoch;
-//   metric.amount = event.params.amount;
-//   metric.strike = event.params.strike;
-//   metric.fee = event.params.fee;
-//   metric.premium = event.params.premium;
-//   metric.sender = event.params.sender;
-//   metric.user = event.params.user;
-
-//   metric.save();
-// }
+const ZERO = BigDecimal.fromString("0");
 
 export function updateSSOVDepositsState(
   timestamp: BigInt,
@@ -113,16 +60,35 @@ export function updateSSOVDepositsState(
       assetToDecimals(asset)
     );
 
+    let summedTotalDeposits: BigDecimal = BigDecimal.fromString("0");
+    let summedUserDeposits: BigDecimal = BigDecimal.fromString("0");
     const newOwnerships: BigDecimal[] = [];
     for (let i = 0; i < metric.totalDeposits.length; i++) {
       const totalDeposit = metric.totalDeposits[i];
-      if (
-        totalDeposit.equals(BigDecimal.fromString("0")) ||
-        metric.userDeposits[i].equals(BigDecimal.fromString("0"))
-      ) {
+      if (totalDeposit.equals(ZERO) || metric.userDeposits[i].equals(ZERO)) {
         newOwnerships.push(BigDecimal.fromString("0"));
       } else {
         newOwnerships.push(metric.userDeposits[i].div(totalDeposit));
+      }
+
+      // do the sum stuff
+      summedTotalDeposits = summedTotalDeposits.plus(totalDeposit);
+      summedUserDeposits = summedUserDeposits.plus(metric.userDeposits[i]);
+    }
+
+    metric.summedTotalDeposits = summedTotalDeposits;
+    metric.summedUserDeposits = summedUserDeposits;
+    // try to divide and get summed ownership data
+    if (!(summedTotalDeposits.equals(ZERO) || summedUserDeposits.equals(ZERO))) {
+      // If neither are zero then we set the ownership ratio
+      metric.summedOwnership = summedUserDeposits.div(summedTotalDeposits);
+
+      if (asset === "DPX") {
+        // Then we look at the farming stuff
+        const ssovDPXEarned = getEarningsFromDPXFarm(DPX_SSOV_V2);
+        const userDPXEarned = ssovDPXEarned.times(metric.summedOwnership);
+        metric.totalFarmRewards = ssovDPXEarned;
+        metric.userFarmRewards = userDPXEarned;
       }
     }
 
@@ -138,7 +104,7 @@ export function updateSSOVDepositsState(
       const newUserPremiums: BigDecimal[] = [];
       for (let i = 0; i < metric.totalPremiums.length; i++) {
         const totalPremium = metric.totalPremiums[i];
-        if (totalPremium.equals(BigDecimal.fromString("0"))) {
+        if (totalPremium.equals(ZERO)) {
           newUserPremiums.push(BigDecimal.fromString("0"));
         } else {
           newUserPremiums.push(totalPremium.times(metric.ownership[i]));

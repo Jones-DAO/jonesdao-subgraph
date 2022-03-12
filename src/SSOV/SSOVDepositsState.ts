@@ -21,6 +21,12 @@ export function loadOrCreateSSOVDepositsStateMetric(
     metric.assetPrice = BigDecimal.fromString("-1");
     metric.user = "";
 
+    metric.summedTotalDeposits = BigDecimal.fromString("0");
+    metric.summedUserDeposits = BigDecimal.fromString("0");
+    metric.summedOwnership = BigDecimal.fromString("0");
+    metric.totalFarmRewards = BigDecimal.fromString("0");
+    metric.userFarmRewards = BigDecimal.fromString("0");
+
     metric.save();
   }
 
