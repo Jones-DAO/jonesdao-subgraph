@@ -8,7 +8,7 @@ dataSources:
     source:
       address: "0xe8EE01aE5959D3231506FcDeF2d5F3E85987a39c"
       abi: UniswapV2Pair
-      startBlock: 6815879
+      startBlock: 6815880
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -26,6 +26,8 @@ dataSources:
           file: ./abis/DpxCustomPriceOracle.json
         - name: StakingRewards
           file: ./abis/StakingRewards.json
+        - name: JonesArbETHVaultV2
+          file: ./abis/JonesArbETHVaultV2.json
       eventHandlers:
         - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
           handler: handleSwap
@@ -36,7 +38,7 @@ dataSources:
     source:
       address: "0x6be861aA87009331bF62E22D418Ab666e88B1354"
       abi: JonesArbETHVaultV2
-      startBlock: 6815879
+      startBlock: 6815880
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5

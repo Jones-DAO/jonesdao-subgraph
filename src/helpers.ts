@@ -19,6 +19,8 @@ import {
   DPX
 } from "./constants";
 import { toDecimal } from "./utils/Decimals";
+import { loadOrCreateETHBalanceMetric } from "./ETHVaultV2/ETHVaultBalanceMetric";
+import { JonesArbETHVaultV2 } from "../generated/JonesETHVaultV2/JonesArbETHVaultV2";
 
 // NOTE before reading!
 // AssemblyScript / subgraph TS is extremely restrictive. These if statements are the only thing you can do really.
@@ -166,9 +168,26 @@ export const getVaultBalanceOf = (asset: string): BigDecimal => {
   const vaultAddr = assetToJonesVaultV2(asset);
   const vault = Address.fromString(vaultAddr);
 
-  // we read the ERC20
-  const tokenAddr = assetToTokenAddr(asset);
-  const token = ERC20.bind(Address.fromString(tokenAddr));
-  const vaultBalance = token.balanceOf(vault);
-  return toDecimal(vaultBalance, assetToDecimals(asset));
+  if (asset === "ETH") {
+    // eth is very different since its the native asset and not an erc20
+    const ethBalanceMetric = loadOrCreateETHBalanceMetric();
+    if (ethBalanceMetric.balance) {
+      return ethBalanceMetric.balance;
+    } else {
+      // no bueno
+      return BigDecimal.fromString("0");
+    }
+  } else {
+    const tokenAddr = assetToTokenAddr(asset);
+    const token = ERC20.bind(Address.fromString(tokenAddr));
+    const vaultBalance = token.balanceOf(vault);
+    return toDecimal(vaultBalance, assetToDecimals(asset));
+  }
+};
+
+// Simply reads the snapshot value of the contract. This is the starting amount for the current epoch.
+export const getVaultSnapshotBalanceOf = (asset: string): BigDecimal => {
+  const vaultAddr = assetToJonesVaultV2(asset);
+  const vault = JonesArbETHVaultV2.bind(Address.fromString(vaultAddr));
+  return toDecimal(vault.snapshotVaultBalance(), assetToDecimals(asset));
 };

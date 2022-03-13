@@ -2,10 +2,9 @@ import { ArbEthSSOVV2 } from "./../../generated/USDCWETHSwaps/ArbEthSSOVV2";
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { ETH_SSOV_V2, ETH_VAULT, JONES_ETH_VAULT_V2 } from "../constants";
 import {
-  SSOVCallPurchase,
   EpochStarted,
-  SSOVDeposit,
-  JonesArbETHVaultV2
+  SSOVCallPurchase,
+  SSOVDeposit
 } from "./../../generated/JonesETHVaultV2/JonesArbETHVaultV2";
 import { loadOrCreateETHEpochStartedMetric } from "./JonesVaultEpochStartedMetric";
 import { toDecimal } from "../utils/Decimals";

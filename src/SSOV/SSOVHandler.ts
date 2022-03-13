@@ -1,12 +1,5 @@
+import { SSOVDepositsState, SSOVPurchasesState } from "./../../generated/schema";
 import { ArbEthSSOVV2 } from "./../../generated/ETHSSOV/ArbEthSSOVV2";
-import { Deposit, Purchase } from "./../../generated/Curve2PoolSsovPut/Curve2PoolSsovPut";
-import { NewDeposit, NewPurchase } from "../../generated/ETHSSOV/ArbEthSSOVV2";
-import {
-  loadOrCreateSSOVDepositMetric,
-  loadOrCreateSSOVPurchaseMetric,
-  loadOrCreateSSOVPutDepositMetric,
-  loadOrCreateSSOVPutPurchaseMetric
-} from "./SSOVMetric";
 import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 import { loadOrCreateSSOVDepositsStateMetric } from "./SSOVDepositsState";
 import { assetToDecimals, assetToSSOVC, bigIntListToBigDecimalList } from "../helpers";
@@ -17,16 +10,16 @@ import { DPX_SSOV_V2 } from "../constants";
 
 const ZERO = BigDecimal.fromString("0");
 
-export function updateSSOVDepositsState(
+export function updateAndGetSSOVDepositsState(
   timestamp: BigInt,
   dateStr: string,
   asset: string,
   address: string
-): void {
+): SSOVDepositsState | null {
   const ssov = ArbEthSSOVV2.bind(Address.fromString(assetToSSOVC(asset)));
   const maybeEpoch = ssov.try_currentEpoch();
   if (maybeEpoch.reverted) {
-    return;
+    return null;
   }
 
   const metric = loadOrCreateSSOVDepositsStateMetric(timestamp, dateStr, asset);
@@ -34,7 +27,7 @@ export function updateSSOVDepositsState(
   const user = Address.fromString(address);
 
   if (!maybeEpoch.value.gt(BigInt.fromString("0"))) {
-    return;
+    return null;
   }
 
   metric.epoch = maybeEpoch.value;
@@ -85,9 +78,9 @@ export function updateSSOVDepositsState(
 
       if (asset === "DPX") {
         // Then we look at the farming stuff
-        const ssovDPXEarned = getEarningsFromDPXFarm(DPX_SSOV_V2);
-        const userDPXEarned = ssovDPXEarned.times(metric.summedOwnership);
-        metric.totalFarmRewards = ssovDPXEarned;
+        const result = getEarningsFromDPXFarm(DPX_SSOV_V2);
+        const userDPXEarned = result[1].times(metric.summedOwnership);
+        metric.totalFarmRewards = result[1];
         metric.userFarmRewards = userDPXEarned;
       }
     }
@@ -121,18 +114,19 @@ export function updateSSOVDepositsState(
   }
 
   metric.save();
+  return metric;
 }
 
-export function updateSSOVPurchasesState(
+export function updateAndGetSSOVPurchasesState(
   timestamp: BigInt,
   dateStr: string,
   asset: string,
   address: string
-): void {
+): SSOVPurchasesState | null {
   const ssov = ArbEthSSOVV2.bind(Address.fromString(assetToSSOVC(asset)));
   const maybeEpoch = ssov.try_currentEpoch();
   if (maybeEpoch.reverted) {
-    return;
+    return null;
   }
 
   const metric = loadOrCreateSSOVPurchasesStateMetric(timestamp, dateStr, asset);
@@ -140,7 +134,7 @@ export function updateSSOVPurchasesState(
   const user = Address.fromString(address);
 
   if (!maybeEpoch.value.gt(BigInt.fromString("0"))) {
-    return;
+    return null;
   }
 
   metric.epoch = maybeEpoch.value;
@@ -172,4 +166,5 @@ export function updateSSOVPurchasesState(
   }
 
   metric.save();
+  return metric;
 }

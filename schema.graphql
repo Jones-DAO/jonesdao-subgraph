@@ -142,12 +142,17 @@ type ETHEpochStarted @entity {
 
 type JonesVaultPnL @entity {
   id: ID!
+  timestamp: BigInt!
+  epoch: BigInt!
   asset: String!
   pnlPercentage: BigDecimal!
   pnlUnderlying: BigDecimal!
+  totalAssetsDeposited: BigDecimal!
   depositPnl: BigDecimal!
   purchasePnl: BigDecimal!
+  totalAssetsFarming: BigDecimal!
   farmPnl: BigDecimal!
-  depositedAssets: BigDecimal!
-  currentAssets: BigDecimal!
+  epochStartingAssets: BigDecimal!
+  unallocatedAssets: BigDecimal!
+  currentAssetsWithPnl: BigDecimal!
 }

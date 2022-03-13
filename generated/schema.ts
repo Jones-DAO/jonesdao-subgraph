@@ -1348,14 +1348,19 @@ export class JonesVaultPnL extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
+    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
+    this.set("epoch", Value.fromBigInt(BigInt.zero()));
     this.set("asset", Value.fromString(""));
     this.set("pnlPercentage", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("pnlUnderlying", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("totalAssetsDeposited", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("depositPnl", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("purchasePnl", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("totalAssetsFarming", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("farmPnl", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("depositedAssets", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("currentAssets", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("epochStartingAssets", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("unallocatedAssets", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("currentAssetsWithPnl", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -1382,6 +1387,24 @@ export class JonesVaultPnL extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get epoch(): BigInt {
+    let value = this.get("epoch");
+    return value!.toBigInt();
+  }
+
+  set epoch(value: BigInt) {
+    this.set("epoch", Value.fromBigInt(value));
   }
 
   get asset(): string {
@@ -1411,6 +1434,15 @@ export class JonesVaultPnL extends Entity {
     this.set("pnlUnderlying", Value.fromBigDecimal(value));
   }
 
+  get totalAssetsDeposited(): BigDecimal {
+    let value = this.get("totalAssetsDeposited");
+    return value!.toBigDecimal();
+  }
+
+  set totalAssetsDeposited(value: BigDecimal) {
+    this.set("totalAssetsDeposited", Value.fromBigDecimal(value));
+  }
+
   get depositPnl(): BigDecimal {
     let value = this.get("depositPnl");
     return value!.toBigDecimal();
@@ -1429,6 +1461,15 @@ export class JonesVaultPnL extends Entity {
     this.set("purchasePnl", Value.fromBigDecimal(value));
   }
 
+  get totalAssetsFarming(): BigDecimal {
+    let value = this.get("totalAssetsFarming");
+    return value!.toBigDecimal();
+  }
+
+  set totalAssetsFarming(value: BigDecimal) {
+    this.set("totalAssetsFarming", Value.fromBigDecimal(value));
+  }
+
   get farmPnl(): BigDecimal {
     let value = this.get("farmPnl");
     return value!.toBigDecimal();
@@ -1438,21 +1479,30 @@ export class JonesVaultPnL extends Entity {
     this.set("farmPnl", Value.fromBigDecimal(value));
   }
 
-  get depositedAssets(): BigDecimal {
-    let value = this.get("depositedAssets");
+  get epochStartingAssets(): BigDecimal {
+    let value = this.get("epochStartingAssets");
     return value!.toBigDecimal();
   }
 
-  set depositedAssets(value: BigDecimal) {
-    this.set("depositedAssets", Value.fromBigDecimal(value));
+  set epochStartingAssets(value: BigDecimal) {
+    this.set("epochStartingAssets", Value.fromBigDecimal(value));
   }
 
-  get currentAssets(): BigDecimal {
-    let value = this.get("currentAssets");
+  get unallocatedAssets(): BigDecimal {
+    let value = this.get("unallocatedAssets");
     return value!.toBigDecimal();
   }
 
-  set currentAssets(value: BigDecimal) {
-    this.set("currentAssets", Value.fromBigDecimal(value));
+  set unallocatedAssets(value: BigDecimal) {
+    this.set("unallocatedAssets", Value.fromBigDecimal(value));
+  }
+
+  get currentAssetsWithPnl(): BigDecimal {
+    let value = this.get("currentAssetsWithPnl");
+    return value!.toBigDecimal();
+  }
+
+  set currentAssetsWithPnl(value: BigDecimal) {
+    this.set("currentAssetsWithPnl", Value.fromBigDecimal(value));
   }
 }

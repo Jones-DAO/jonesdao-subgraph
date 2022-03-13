@@ -1,5 +1,5 @@
-import { RDPX_SSOV_V2 } from "./../constants";
-import { ArbEthSSOVV2 } from "./../../generated/ETHSSOV/ArbEthSSOVV2";
+import { DpxCustomPriceOracle } from "./../../generated/JonesETHVaultV2/DpxCustomPriceOracle";
+import { RDPX_ORACLE } from "./../constants";
 import { Address, BigDecimal } from "@graphprotocol/graph-ts";
 import { toDecimal } from "./Decimals";
 import { getDPXUSDPrice } from "./DPX";
@@ -10,8 +10,8 @@ export function getRDPXDecimals(): number {
 
 export function getRDPXUSDPrice(): BigDecimal {
   // use the dopex oracle
-  const ssov = ArbEthSSOVV2.bind(Address.fromString(RDPX_SSOV_V2));
-  return toDecimal(ssov.getUsdPrice(), 8); // oracle decimals is 8
+  const oracle = DpxCustomPriceOracle.bind(Address.fromString(RDPX_ORACLE));
+  return toDecimal(oracle.getPriceInUSD(), 8); // oracle decimals is 8
 }
 
 // Converts an amount of rDPX to DPX
