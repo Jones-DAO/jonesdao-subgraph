@@ -1,6 +1,6 @@
 // import { AssetToContract } from "./types";
 
-import { BigInt } from "@graphprotocol/graph-ts";
+import { BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 
 export const JONES = "0x10393c20975cf177a3513071bc110f7962cd67da";
 export const ASSET_MGMT_MULTISIG = "0xDD0556DDCFE7CdaB3540E7F09cB366f498d90774";
@@ -42,3 +42,5 @@ export const JONES_GOHM_STARTBLOCK = "5273398";
 export const JONES_DPX_STARTBLOCK = "6842515";
 
 export const RDPX_ORACLE = "0xC0cdD1176aA1624b89B7476142b41C04414afaa0";
+
+export const DOPEX_EXERCISE_FEE = BigDecimal.fromString("0.0001"); // 0.01% https://docs.dopex.io/pools/platform-flow#fees

@@ -19,7 +19,7 @@ import {
   DPX
 } from "./constants";
 import { toDecimal } from "./utils/Decimals";
-import { loadOrCreateETHBalanceMetric } from "./ETHVaultV2/ETHVaultBalanceMetric";
+import { loadOrCreateETHBalanceMetric } from "./JonesVaults/ETHVaultV2/ETHVaultBalanceMetric";
 import { JonesArbETHVaultV2 } from "../generated/JonesETHVaultV2/JonesArbETHVaultV2";
 
 // NOTE before reading!
@@ -190,4 +190,12 @@ export const getVaultSnapshotBalanceOf = (asset: string): BigDecimal => {
   const vaultAddr = assetToJonesVaultV2(asset);
   const vault = JonesArbETHVaultV2.bind(Address.fromString(vaultAddr));
   return toDecimal(vault.snapshotVaultBalance(), assetToDecimals(asset));
+};
+
+export const sumBigDecimalArray = (arr: BigDecimal[]): BigDecimal => {
+  let sum = BigDecimal.fromString("0");
+  for (let i = 0; i < arr.length; i++) {
+    sum = sum.plus(arr[i]);
+  }
+  return sum;
 };

@@ -99,6 +99,8 @@ type SSOVPurchasesState @entity {
   strikes: [BigDecimal!]!
   callsPurchased: [BigDecimal!]!
   premiumsPaid: [BigDecimal!]!
+  feesPaid: [BigDecimal!]!
+  costToExercise: [BigDecimal!]!
   assetPrice: BigDecimal!
   user: String!
 }
@@ -155,4 +157,47 @@ type JonesVaultPnL @entity {
   epochStartingAssets: BigDecimal!
   unallocatedAssets: BigDecimal!
   currentAssetsWithPnl: BigDecimal!
+}
+
+type JonesSSOVCallPurchase @entity {
+  id: ID!
+  timestamp: BigInt!
+  asset: String!
+  epoch: BigInt!
+  strikeIndex: BigInt!
+  amount: BigDecimal!
+  premium: BigDecimal!
+  totalFee: BigDecimal!
+}
+
+type SummedJonesSSOVCallPurchases @entity {
+  id: ID!
+  asset: String!
+  epoch: BigInt!
+  strikes: [BigInt!]!
+  callsPurchased: [BigDecimal!]!
+  premiumsPaid: [BigDecimal!]!
+  feesPaid: [BigDecimal!]!
+  costToExercise: [BigDecimal!]!
+  totalPremiumsPaid: BigDecimal!
+  totalFeesPaid: BigDecimal!
+  totalCostToExercise: BigDecimal!
+}
+
+type JonesSSOVCallDeposit @entity {
+  id: ID!
+  timestamp: BigInt!
+  asset: String!
+  epoch: BigInt!
+  strikeIndex: BigInt!
+  amount: BigDecimal!
+}
+
+type JonesEpochStarted @entity {
+  id: ID!
+  timestamp: BigInt!
+  asset: String!
+  epoch: BigInt!
+  amount: BigDecimal!
+  jAssetAmount: BigDecimal!
 }

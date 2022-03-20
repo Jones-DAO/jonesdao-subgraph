@@ -1,0 +1,16 @@
+Notes
+
+-- Taken from discord, should be able to run locally like this
+cargo run -p graph-node --release -- --postgres-url postgresql://username:@localhost:5432/arbitrum --ethereum-rpc arbitrum-one,full:https://arb1.arbitrum.io/rpc --ipfs 127.0.0.1:5001
+
+Docs
+https://github.com/graphprotocol/graph-node/blob/master/docs/getting-started.md#23-start-the-graph-node-and-connect-to-an-etheruem-node
+
+Disc msg link https://discord.com/channels/438038660412342282/438070183794573313/945862025614078003
+
+Arbitrum rpc
+https://arb1.arbitrum.io/rpc
+https://help.uniswap.org/en/articles/5538707-how-to-connect-to-arbitrum
+
+// https://discord.com/channels/438038660412342282/791444480628490290/914819058883498015
+

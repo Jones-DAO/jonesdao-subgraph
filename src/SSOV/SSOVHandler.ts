@@ -1,4 +1,8 @@
-import { SSOVDepositsState, SSOVPurchasesState } from "./../../generated/schema";
+import {
+  SSOVDepositsState,
+  SSOVPurchasesState,
+  SummedJonesSSOVCallPurchases
+} from "./../../generated/schema";
 import { ArbEthSSOVV2 } from "./../../generated/ETHSSOV/ArbEthSSOVV2";
 import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 import { loadOrCreateSSOVDepositsStateMetric } from "./SSOVDepositsState";
@@ -7,6 +11,8 @@ import { loadOrCreateSSOVPurchasesStateMetric } from "./SSOVPurchasesState";
 import { toDecimal } from "../utils/Decimals";
 import { getEarningsFromDPXFarm } from "../Farms/DPXFarm";
 import { DPX_SSOV_V2 } from "../constants";
+import { SSOVCallPurchase, SSOVDeposit } from "../../generated/JonesETHVaultV2/JonesArbETHVaultV2";
+import { loadSummedJonesSSOVCallPurchaseMetric } from "../JonesVaults/VaultV2Metrics";
 
 const ZERO = BigDecimal.fromString("0");
 
@@ -128,17 +134,16 @@ export function updateAndGetSSOVPurchasesState(
   if (maybeEpoch.reverted) {
     return null;
   }
-
+  const epoch = maybeEpoch.value;
   const metric = loadOrCreateSSOVPurchasesStateMetric(timestamp, dateStr, asset);
 
   const user = Address.fromString(address);
 
-  if (!maybeEpoch.value.gt(BigInt.fromString("0"))) {
+  if (!epoch.gt(BigInt.fromString("0"))) {
     return null;
   }
 
-  metric.epoch = maybeEpoch.value;
-  const epoch = maybeEpoch.value;
+  metric.epoch = epoch;
   metric.user = user.toHexString();
   metric.asset = asset;
 
@@ -163,6 +168,13 @@ export function updateAndGetSSOVPurchasesState(
   const maybeAssetPrice = ssov.try_getUsdPrice();
   if (!maybeAssetPrice.reverted) {
     metric.assetPrice = toDecimal(maybeAssetPrice.value, 8);
+  }
+
+  // lets get the fee breakdown as well
+  const maybePurchasesMetric = loadSummedJonesSSOVCallPurchaseMetric(asset, epoch);
+  if (maybePurchasesMetric != null) {
+    metric.feesPaid = maybePurchasesMetric.feesPaid;
+    metric.costToExercise = maybePurchasesMetric.costToExercise;
   }
 
   metric.save();

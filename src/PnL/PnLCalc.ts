@@ -48,14 +48,16 @@ export function calculatePurchasedCallPnl(purchases: SSOVPurchasesState): BigDec
     const premiumPaid = purchases.premiumsPaid[i];
     const calls = purchases.callsPurchased[i];
     const strike = purchases.strikes[i];
+    const costToExercise = purchases.costToExercise[i];
 
     totalCalls = totalCalls.plus(calls);
     totalPremiumPaid = totalPremiumPaid.plus(premiumPaid);
 
+    // We're in the money
     if (calls.gt(ZERO) && strike.lt(price)) {
       const assetMultiplier = price.div(strike);
       const executedAssetAtStrike = calls.times(assetMultiplier);
-      const profit = executedAssetAtStrike.minus(calls);
+      const profit = executedAssetAtStrike.minus(calls).minus(costToExercise);
       totalProfit = totalProfit.plus(profit);
     }
   }

@@ -1,4 +1,4 @@
-import { ETHBalance } from "../../generated/schema";
+import { ETHBalance } from "../../../generated/schema";
 
 const BALANCE_ID = "balance";
 

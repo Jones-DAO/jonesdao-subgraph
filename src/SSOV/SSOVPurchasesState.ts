@@ -16,6 +16,8 @@ export function loadOrCreateSSOVPurchasesStateMetric(
     metric.strikes = [];
     metric.callsPurchased = [];
     metric.premiumsPaid = [];
+    metric.feesPaid = [];
+    metric.costToExercise = [];
     metric.assetPrice = BigDecimal.fromString("-1");
     metric.user = "";
 
