@@ -1,5 +1,5 @@
 import { BigDecimal, log } from "@graphprotocol/graph-ts";
-import { SSOVDepositsState, SSOVPurchasesState } from "../../generated/schema";
+import { SSOVCallDepositsState, SSOVCallPurchasesState } from "../../generated/schema";
 
 const ZERO = BigDecimal.fromString("0");
 
@@ -8,7 +8,7 @@ const ZERO = BigDecimal.fromString("0");
  * @param deposits The deposits state
  * @returns an array with [pnl, deposit, current]
  */
-export function calculateWrittenCallPnl(deposits: SSOVDepositsState): BigDecimal[] {
+export function calculateWrittenCallPnl(deposits: SSOVCallDepositsState): BigDecimal[] {
   let totalPremiumGained = BigDecimal.fromString("0");
   let totalProfit = BigDecimal.fromString("0");
   let totalDeposits = BigDecimal.fromString("0");
@@ -37,7 +37,7 @@ export function calculateWrittenCallPnl(deposits: SSOVDepositsState): BigDecimal
 }
 
 // https://github.com/Jones-DAO/jones_pnl_service/blob/main/src/strategies/dopex/OptionsBuyingStrategy.ts
-export function calculatePurchasedCallPnl(purchases: SSOVPurchasesState): BigDecimal {
+export function calculatePurchasedCallPnl(purchases: SSOVCallPurchasesState): BigDecimal {
   let totalPremiumPaid = BigDecimal.fromString("0");
   let totalCalls = BigDecimal.fromString("0");
   let totalProfit = BigDecimal.fromString("0");

@@ -1,34 +1,29 @@
-import {
-  SSOVDepositsState,
-  SSOVPurchasesState,
-  SummedJonesSSOVCallPurchases
-} from "./../../generated/schema";
+import { SSOVCallDepositsState, SSOVCallPurchasesState } from "./../../generated/schema";
 import { ArbEthSSOVV2 } from "./../../generated/ETHSSOV/ArbEthSSOVV2";
 import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
-import { loadOrCreateSSOVDepositsStateMetric } from "./SSOVDepositsState";
+import { loadOrCreateSSOVCallDepositsStateMetric } from "./SSOVDepositsState";
 import { assetToDecimals, assetToSSOVC, bigIntListToBigDecimalList } from "../helpers";
-import { loadOrCreateSSOVPurchasesStateMetric } from "./SSOVPurchasesState";
+import { loadOrCreateSSOVCallPurchasesStateMetric } from "./SSOVPurchasesState";
 import { toDecimal } from "../utils/Decimals";
 import { getEarningsFromDPXFarm } from "../Farms/DPXFarm";
 import { DPX_SSOV_V2 } from "../constants";
-import { SSOVCallPurchase, SSOVDeposit } from "../../generated/JonesETHVaultV2/JonesArbETHVaultV2";
 import { loadSummedJonesSSOVCallPurchaseMetric } from "../JonesVaults/VaultV2Metrics";
 
 const ZERO = BigDecimal.fromString("0");
 
-export function updateAndGetSSOVDepositsState(
+export function updateAndGetSSOVCallDepositsState(
   timestamp: BigInt,
   dateStr: string,
   asset: string,
   address: string
-): SSOVDepositsState | null {
+): SSOVCallDepositsState | null {
   const ssov = ArbEthSSOVV2.bind(Address.fromString(assetToSSOVC(asset)));
   const maybeEpoch = ssov.try_currentEpoch();
   if (maybeEpoch.reverted) {
     return null;
   }
 
-  const metric = loadOrCreateSSOVDepositsStateMetric(timestamp, dateStr, asset);
+  const metric = loadOrCreateSSOVCallDepositsStateMetric(timestamp, dateStr, asset);
 
   const user = Address.fromString(address);
 
@@ -123,19 +118,19 @@ export function updateAndGetSSOVDepositsState(
   return metric;
 }
 
-export function updateAndGetSSOVPurchasesState(
+export function updateAndGetSSOVCallPurchasesState(
   timestamp: BigInt,
   dateStr: string,
   asset: string,
   address: string
-): SSOVPurchasesState | null {
+): SSOVCallPurchasesState | null {
   const ssov = ArbEthSSOVV2.bind(Address.fromString(assetToSSOVC(asset)));
   const maybeEpoch = ssov.try_currentEpoch();
   if (maybeEpoch.reverted) {
     return null;
   }
   const epoch = maybeEpoch.value;
-  const metric = loadOrCreateSSOVPurchasesStateMetric(timestamp, dateStr, asset);
+  const metric = loadOrCreateSSOVCallPurchasesStateMetric(timestamp, dateStr, asset);
 
   const user = Address.fromString(address);
 

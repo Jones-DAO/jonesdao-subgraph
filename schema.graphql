@@ -1,19 +1,3 @@
-type JETHMetric @entity {
-  id: ID!
-  timestamp: BigInt!
-  JETHToETHRatio: BigDecimal!
-  JETHUSDPrice: BigDecimal!
-  ETHUSDPrice: BigDecimal!
-}
-
-type JGOHMMetric @entity {
-  id: ID!
-  timestamp: BigInt!
-  JGOHMToGOHMRatio: BigDecimal!
-  JGOHMUSDPrice: BigDecimal!
-  GOHMUSDPrice: BigDecimal!
-}
-
 type JAssetMetric @entity {
   id: ID!
   timestamp: BigInt!
@@ -23,7 +7,7 @@ type JAssetMetric @entity {
   AssetPrice: BigDecimal!
 }
 
-type SSOVDeposit @entity {
+type SSOVCallDeposit @entity {
   id: ID!
   timestamp: BigInt!
   epoch: BigInt!
@@ -45,7 +29,7 @@ type SSOVPutDeposit @entity {
   sender: Bytes!
 }
 
-type SSOVDepositsState @entity {
+type SSOVCallDepositsState @entity {
   id: ID!
   timestamp: BigInt!
   epoch: BigInt!
@@ -65,7 +49,7 @@ type SSOVDepositsState @entity {
   user: String!
 }
 
-type SSOVPurchase @entity {
+type SSOVCallPurchase @entity {
   id: ID!
   timestamp: BigInt!
   epoch: BigInt!
@@ -91,7 +75,7 @@ type SSOVPutPurchase @entity {
   sender: Bytes!
 }
 
-type SSOVPurchasesState @entity {
+type SSOVCallPurchasesState @entity {
   id: ID!
   timestamp: BigInt!
   epoch: BigInt!
@@ -114,32 +98,6 @@ type Heartbeat @entity {
 type ETHBalance @entity {
   id: ID!
   balance: BigDecimal!
-}
-
-type ETHSSOVDeposit @entity {
-  id: ID!
-  timestamp: BigInt!
-  epoch: BigInt!
-  strikeIndex: BigInt!
-  amount: BigDecimal!
-}
-
-type ETHSSOVCallPurchase @entity {
-  id: ID!
-  timestamp: BigInt!
-  epoch: BigInt!
-  strikeIndex: BigInt!
-  amount: BigDecimal!
-  premium: BigDecimal!
-  totalFee: BigDecimal!
-}
-
-type ETHEpochStarted @entity {
-  id: ID!
-  timestamp: BigInt!
-  epoch: BigInt!
-  amount: BigDecimal!
-  jAssetAmount: BigDecimal!
 }
 
 type JonesVaultPnL @entity {

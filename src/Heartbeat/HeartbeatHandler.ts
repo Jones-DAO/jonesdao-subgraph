@@ -4,7 +4,10 @@ import { Swap } from "../../generated/JonesETHVaultV1/UniswapV2Pair";
 import { ASSET_MGMT_MULTISIG } from "../constants";
 import { assetToJonesVaultV2, getVaultSnapshotBalanceOf, shouldReadAsset } from "../helpers";
 import { collectJAssetData } from "../JAsset/JAssetHandler";
-import { updateAndGetSSOVDepositsState, updateAndGetSSOVPurchasesState } from "../SSOV/SSOVHandler";
+import {
+  updateAndGetSSOVCallDepositsState,
+  updateAndGetSSOVCallPurchasesState
+} from "../SSOV/SSOVHandler";
 import { timestampToISODateString, timestampToISOHourString } from "../utils/Date";
 import { loadOrCreateHeartbeat } from "./HeartbeatMetric";
 import { calculatePurchasedCallPnl, calculateWrittenCallPnl } from "../PnL/PnLCalc";
@@ -36,8 +39,8 @@ export function handleSwap(event: Swap): void {
         ? ASSET_MGMT_MULTISIG
         : assetToJonesVaultV2(asset);
 
-      const depositState = updateAndGetSSOVDepositsState(timestamp, dateStr, asset, userAddr);
-      const purchaseState = updateAndGetSSOVPurchasesState(timestamp, dateStr, asset, userAddr);
+      const depositState = updateAndGetSSOVCallDepositsState(timestamp, dateStr, asset, userAddr);
+      const purchaseState = updateAndGetSSOVCallPurchasesState(timestamp, dateStr, asset, userAddr);
 
       // For each asset, let's do the following:
       /**

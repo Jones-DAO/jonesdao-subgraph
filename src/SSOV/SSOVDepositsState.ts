@@ -1,15 +1,15 @@
 import { BigDecimal, BigInt } from "@graphprotocol/graph-ts";
-import { SSOVDepositsState } from "../../generated/schema";
+import { SSOVCallDepositsState } from "../../generated/schema";
 
-export function loadOrCreateSSOVDepositsStateMetric(
+export function loadOrCreateSSOVCallDepositsStateMetric(
   timestamp: BigInt,
   dateStr: string,
   asset: string
-): SSOVDepositsState {
-  let metric = SSOVDepositsState.load(dateStr + asset);
+): SSOVCallDepositsState {
+  let metric = SSOVCallDepositsState.load(dateStr + asset);
 
   if (metric == null) {
-    metric = new SSOVDepositsState(dateStr + asset);
+    metric = new SSOVCallDepositsState(dateStr + asset);
     metric.timestamp = timestamp;
     metric.asset = asset;
     metric.epoch = BigInt.fromString("-1");

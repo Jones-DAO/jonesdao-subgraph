@@ -1,15 +1,15 @@
 import { BigDecimal, BigInt } from "@graphprotocol/graph-ts";
-import { SSOVPurchasesState } from "../../generated/schema";
+import { SSOVCallPurchasesState } from "../../generated/schema";
 
-export function loadOrCreateSSOVPurchasesStateMetric(
+export function loadOrCreateSSOVCallPurchasesStateMetric(
   timestamp: BigInt,
   dateStr: string,
   asset: string
-): SSOVPurchasesState {
-  let metric = SSOVPurchasesState.load(dateStr + asset);
+): SSOVCallPurchasesState {
+  let metric = SSOVCallPurchasesState.load(dateStr + asset);
 
   if (metric == null) {
-    metric = new SSOVPurchasesState(dateStr + asset);
+    metric = new SSOVCallPurchasesState(dateStr + asset);
     metric.timestamp = timestamp;
     metric.asset = asset;
     metric.epoch = BigInt.fromString("-1");
