@@ -1,5 +1,6 @@
 import { BigDecimal, log } from "@graphprotocol/graph-ts";
 import { SSOVCallDepositsState, SSOVCallPurchasesState } from "../../generated/schema";
+import { DOPEX_EXERCISE_FEE } from "../constants";
 
 const ZERO = BigDecimal.fromString("0");
 
@@ -31,7 +32,9 @@ export function calculateWrittenCallPnl(deposits: SSOVCallDepositsState): BigDec
 
   // zero for all assets except for DPX
   const totalFarmProfits = deposits.userFarmRewards;
-  const pnl = totalProfit.plus(totalFarmProfits);
+  // zero for all assets except for ETH (as of right now)
+  const totalRewardProfits = deposits.summedUserDepositRewards;
+  const pnl = totalProfit.plus(totalFarmProfits).plus(totalRewardProfits);
 
   return [pnl, totalDeposits, totalDeposits.plus(pnl)];
 }
@@ -48,7 +51,7 @@ export function calculatePurchasedCallPnl(purchases: SSOVCallPurchasesState): Bi
     const premiumPaid = purchases.premiumsPaid[i];
     const calls = purchases.callsPurchased[i];
     const strike = purchases.strikes[i];
-    const costToExercise = purchases.costToExercise[i];
+    const costToExercise = calls.times(DOPEX_EXERCISE_FEE);
 
     totalCalls = totalCalls.plus(calls);
     totalPremiumPaid = totalPremiumPaid.plus(premiumPaid);

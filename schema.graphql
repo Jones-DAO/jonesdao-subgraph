@@ -7,17 +7,6 @@ type JAssetMetric @entity {
   AssetPrice: BigDecimal!
 }
 
-type SSOVCallDeposit @entity {
-  id: ID!
-  timestamp: BigInt!
-  epoch: BigInt!
-  asset: String!
-  strike: BigInt!
-  amount: BigInt!
-  user: Bytes!
-  sender: Bytes!
-}
-
 type SSOVPutDeposit @entity {
   id: ID!
   timestamp: BigInt!
@@ -37,29 +26,19 @@ type SSOVCallDepositsState @entity {
   strikes: [BigDecimal!]!
   ownership: [BigDecimal!]!
   totalDeposits: [BigDecimal!]!
+  userDeposits: [BigDecimal!]!
   summedTotalDeposits: BigDecimal!
   summedUserDeposits: BigDecimal!
   summedOwnership: BigDecimal!
+  pnlPercentage: BigDecimal!
+  pnlUnderlying: BigDecimal!
   totalFarmRewards: BigDecimal!
   userFarmRewards: BigDecimal!
-  userDeposits: [BigDecimal!]!
   totalPremiums: [BigDecimal!]!
   userPremiums: [BigDecimal!]!
+  summedUserDepositRewards: BigDecimal!
   assetPrice: BigDecimal!
   user: String!
-}
-
-type SSOVCallPurchase @entity {
-  id: ID!
-  timestamp: BigInt!
-  epoch: BigInt!
-  asset: String!
-  strike: BigInt!
-  amount: BigInt!
-  fee: BigInt!
-  premium: BigInt!
-  user: Bytes!
-  sender: Bytes!
 }
 
 type SSOVPutPurchase @entity {
@@ -86,6 +65,10 @@ type SSOVCallPurchasesState @entity {
   feesPaid: [BigDecimal!]!
   costToExercise: [BigDecimal!]!
   assetPrice: BigDecimal!
+  totalPremiumsPaid: BigDecimal!
+  totalFeesPaid: BigDecimal!
+  pnlPercentage: BigDecimal!
+  pnlUnderlying: BigDecimal!
   user: String!
 }
 
@@ -95,6 +78,7 @@ type Heartbeat @entity {
   timestamp: BigInt!
 }
 
+# Just a helper to keep track of eth balance internally
 type ETHBalance @entity {
   id: ID!
   balance: BigDecimal!
@@ -112,9 +96,11 @@ type JonesVaultPnL @entity {
   purchasePnl: BigDecimal!
   totalAssetsFarming: BigDecimal!
   farmPnl: BigDecimal!
+  rewardsPnl: BigDecimal!
   epochStartingAssets: BigDecimal!
   unallocatedAssets: BigDecimal!
   currentAssetsWithPnl: BigDecimal!
+  assetPrice: BigDecimal!
 }
 
 type JonesSSOVCallPurchase @entity {
@@ -128,7 +114,7 @@ type JonesSSOVCallPurchase @entity {
   totalFee: BigDecimal!
 }
 
-type SummedJonesSSOVCallPurchases @entity {
+type SummedJonesSSOVCallPurchase @entity {
   id: ID!
   asset: String!
   epoch: BigInt!

@@ -2,9 +2,9 @@ import {
   JonesEpochStarted,
   JonesSSOVCallDeposit,
   JonesSSOVCallPurchase,
-  SummedJonesSSOVCallPurchases
+  SummedJonesSSOVCallPurchase
 } from "../../generated/schema";
-import { BigDecimal, BigInt } from "@graphprotocol/graph-ts";
+import { BigDecimal, BigInt, log } from "@graphprotocol/graph-ts";
 
 export function loadOrCreateJonesSSOVCallDepositMetric(
   timestamp: BigInt,
@@ -53,27 +53,31 @@ export function loadOrCreateSummedJonesSSOVCallPurchaseMetric(
   asset: string,
   epoch: BigInt,
   strikes: BigInt[]
-): SummedJonesSSOVCallPurchases {
-  let metric = SummedJonesSSOVCallPurchases.load(asset + epoch.toString());
+): SummedJonesSSOVCallPurchase {
+  let metric = SummedJonesSSOVCallPurchase.load(asset + epoch.toString());
 
   if (metric == null) {
-    metric = new SummedJonesSSOVCallPurchases(asset + epoch.toString());
+    metric = new SummedJonesSSOVCallPurchase(asset + epoch.toString());
     metric.asset = asset;
     metric.epoch = epoch;
     metric.strikes = strikes;
 
-    metric.callsPurchased = [];
-    metric.premiumsPaid = [];
-    metric.feesPaid = [];
-    metric.costToExercise = [];
+    let callsPurchased: BigDecimal[] = [];
+    let premiumsPaid: BigDecimal[] = [];
+    let feesPaid: BigDecimal[] = [];
+    let costToExercise: BigDecimal[] = [];
 
     for (let i = 0; i < strikes.length; i++) {
-      metric.callsPurchased.push(BigDecimal.fromString("0"));
-      metric.premiumsPaid.push(BigDecimal.fromString("0"));
-      metric.feesPaid.push(BigDecimal.fromString("0"));
-      metric.costToExercise.push(BigDecimal.fromString("0"));
+      callsPurchased.push(BigDecimal.fromString("0"));
+      premiumsPaid.push(BigDecimal.fromString("0"));
+      feesPaid.push(BigDecimal.fromString("0"));
+      costToExercise.push(BigDecimal.fromString("0"));
     }
 
+    metric.callsPurchased = callsPurchased;
+    metric.premiumsPaid = premiumsPaid;
+    metric.feesPaid = feesPaid;
+    metric.costToExercise = costToExercise;
     metric.totalPremiumsPaid = BigDecimal.fromString("0");
     metric.totalFeesPaid = BigDecimal.fromString("0");
     metric.totalCostToExercise = BigDecimal.fromString("0");
@@ -87,8 +91,8 @@ export function loadOrCreateSummedJonesSSOVCallPurchaseMetric(
 export function loadSummedJonesSSOVCallPurchaseMetric(
   asset: string,
   epoch: BigInt
-): SummedJonesSSOVCallPurchases | null {
-  return SummedJonesSSOVCallPurchases.load(asset + epoch.toString());
+): SummedJonesSSOVCallPurchase | null {
+  return SummedJonesSSOVCallPurchase.load(asset + epoch.toString());
 }
 
 export function loadOrCreateJonesEpochStartedMetric(

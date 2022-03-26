@@ -199,3 +199,17 @@ export const sumBigDecimalArray = (arr: BigDecimal[]): BigDecimal => {
   }
   return sum;
 };
+
+// When just wanting to modify a value at an index in an array we need to create a brand new array to trigger some change detection thing.
+export const plusBigDecimalAtIndex = (
+  arr: BigDecimal[],
+  index: number,
+  other: BigDecimal
+): BigDecimal[] => {
+  const newArr: BigDecimal[] = [];
+  for (let i = 0; i < arr.length; i++) {
+    const newValueAtIndex = index === i ? arr[i].plus(other) : arr[i];
+    newArr.push(newValueAtIndex);
+  }
+  return newArr;
+};

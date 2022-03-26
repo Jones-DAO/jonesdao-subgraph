@@ -1,13 +1,21 @@
 import { SSOVCallDepositsState, SSOVCallPurchasesState } from "./../../generated/schema";
 import { ArbEthSSOVV2 } from "./../../generated/ETHSSOV/ArbEthSSOVV2";
-import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigDecimal, BigInt, log } from "@graphprotocol/graph-ts";
 import { loadOrCreateSSOVCallDepositsStateMetric } from "./SSOVDepositsState";
-import { assetToDecimals, assetToSSOVC, bigIntListToBigDecimalList } from "../helpers";
+import {
+  assetToDecimals,
+  assetToSSOVC,
+  bigIntListToBigDecimalList,
+  sumBigDecimalArray
+} from "../helpers";
 import { loadOrCreateSSOVCallPurchasesStateMetric } from "./SSOVPurchasesState";
 import { toDecimal } from "../utils/Decimals";
 import { getEarningsFromDPXFarm } from "../Farms/DPXFarm";
-import { DPX_SSOV_V2 } from "../constants";
+import { DPX_REWARDS_DISTRIBUTION, DPX_SSOV_V2 } from "../constants";
 import { loadSummedJonesSSOVCallPurchaseMetric } from "../JonesVaults/VaultV2Metrics";
+import { calculatePurchasedCallPnl, calculateWrittenCallPnl } from "../PnL/PnLCalc";
+import { getDPXDecimals, getDPXUSDPrice } from "../utils/DPX";
+import { getWETHPrice } from "../utils/WETH";
 
 const ZERO = BigDecimal.fromString("0");
 
@@ -23,16 +31,21 @@ export function updateAndGetSSOVCallDepositsState(
     return null;
   }
 
-  const metric = loadOrCreateSSOVCallDepositsStateMetric(timestamp, dateStr, asset);
-
-  const user = Address.fromString(address);
-
   if (!maybeEpoch.value.gt(BigInt.fromString("0"))) {
     return null;
   }
 
-  metric.epoch = maybeEpoch.value;
+  // we have a valid epoch, but we only wanna calc stuff if the epoch is not expired
+  if (ssov.isEpochExpired(maybeEpoch.value)) {
+    return null;
+  }
+
+  const metric = loadOrCreateSSOVCallDepositsStateMetric(timestamp, dateStr, asset);
+
+  const user = Address.fromString(address);
+
   const epoch = maybeEpoch.value;
+  metric.epoch = epoch;
   metric.user = user.toHexString();
   metric.asset = asset;
 
@@ -70,6 +83,7 @@ export function updateAndGetSSOVCallDepositsState(
       summedUserDeposits = summedUserDeposits.plus(metric.userDeposits[i]);
     }
 
+    metric.ownership = newOwnerships;
     metric.summedTotalDeposits = summedTotalDeposits;
     metric.summedUserDeposits = summedUserDeposits;
     // try to divide and get summed ownership data
@@ -84,9 +98,35 @@ export function updateAndGetSSOVCallDepositsState(
         metric.totalFarmRewards = result[1];
         metric.userFarmRewards = userDPXEarned;
       }
-    }
 
-    metric.ownership = newOwnerships;
+      if (asset === "ETH") {
+        // We look at Dopex team's incentives rewards
+        const dpxSsov = ArbEthSSOVV2.bind(Address.fromString(assetToSSOVC("DPX")));
+        const rewardsDistributorDeposits = dpxSsov.getUserEpochDeposits(
+          epoch,
+          Address.fromString(DPX_REWARDS_DISTRIBUTION)
+        );
+        const summedRewardsDistributorDeposits = sumBigDecimalArray(
+          bigIntListToBigDecimalList(rewardsDistributorDeposits, getDPXDecimals())
+        );
+        const totalDPXSSOVDeposits = bigIntListToBigDecimalList(
+          dpxSsov.getTotalEpochStrikeDeposits(epoch),
+          getDPXDecimals()
+        );
+        const summedTotalDPXSSOVDeposits = sumBigDecimalArray(totalDPXSSOVDeposits);
+        const rewardsDistributorTotalOwnership = summedRewardsDistributorDeposits.div(
+          summedTotalDPXSSOVDeposits
+        );
+        const result = getEarningsFromDPXFarm(DPX_SSOV_V2);
+        const totalDPXFarmingFromSSOV = result[0].plus(result[1]); // deposits + rewards (in DPX terms)
+        const rewardsAvailableInDPX = rewardsDistributorTotalOwnership.times(
+          totalDPXFarmingFromSSOV
+        );
+        const dpxToEthRatio = getDPXUSDPrice().div(getWETHPrice());
+        const rewardsAvailableInETH = rewardsAvailableInDPX.times(dpxToEthRatio);
+        metric.summedUserDepositRewards = metric.summedOwnership.times(rewardsAvailableInETH);
+      }
+    }
 
     const maybeTotalPremiums = ssov.try_getTotalEpochPremium(epoch);
     if (!maybeTotalPremiums.reverted) {
@@ -114,6 +154,13 @@ export function updateAndGetSSOVCallDepositsState(
     metric.assetPrice = toDecimal(maybeAssetPrice.value, 8);
   }
 
+  const result = calculateWrittenCallPnl(metric);
+  const pnl = result[0];
+  metric.pnlUnderlying = pnl;
+  if (pnl.notEqual(ZERO) && metric.summedUserDeposits.notEqual(ZERO)) {
+    metric.pnlPercentage = pnl.div(metric.summedUserDeposits);
+  }
+
   metric.save();
   return metric;
 }
@@ -129,14 +176,18 @@ export function updateAndGetSSOVCallPurchasesState(
   if (maybeEpoch.reverted) {
     return null;
   }
+  if (!maybeEpoch.value.gt(BigInt.fromString("0"))) {
+    return null;
+  }
+  // we have a valid epoch, but we only wanna calc stuff if the epoch is not expired
+  if (ssov.isEpochExpired(maybeEpoch.value)) {
+    return null;
+  }
+
   const epoch = maybeEpoch.value;
   const metric = loadOrCreateSSOVCallPurchasesStateMetric(timestamp, dateStr, asset);
 
   const user = Address.fromString(address);
-
-  if (!epoch.gt(BigInt.fromString("0"))) {
-    return null;
-  }
 
   metric.epoch = epoch;
   metric.user = user.toHexString();
@@ -170,6 +221,15 @@ export function updateAndGetSSOVCallPurchasesState(
   if (maybePurchasesMetric != null) {
     metric.feesPaid = maybePurchasesMetric.feesPaid;
     metric.costToExercise = maybePurchasesMetric.costToExercise;
+  }
+
+  metric.totalPremiumsPaid = sumBigDecimalArray(metric.premiumsPaid);
+  metric.totalFeesPaid = sumBigDecimalArray(metric.feesPaid);
+
+  metric.pnlUnderlying = calculatePurchasedCallPnl(metric);
+  const totalCosts = metric.totalPremiumsPaid.plus(metric.totalFeesPaid);
+  if (metric.pnlUnderlying.notEqual(ZERO) && totalCosts.notEqual(ZERO)) {
+    metric.pnlPercentage = metric.pnlUnderlying.div(totalCosts);
   }
 
   metric.save();

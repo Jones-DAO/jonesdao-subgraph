@@ -21,6 +21,11 @@ export function loadOrCreateSSOVCallPurchasesStateMetric(
     metric.assetPrice = BigDecimal.fromString("-1");
     metric.user = "";
 
+    metric.totalPremiumsPaid = BigDecimal.fromString("0");
+    metric.totalFeesPaid = BigDecimal.fromString("0");
+    metric.pnlPercentage = BigDecimal.fromString("0");
+    metric.pnlUnderlying = BigDecimal.fromString("0");
+
     metric.save();
   } else {
     metric.timestamp = timestamp;

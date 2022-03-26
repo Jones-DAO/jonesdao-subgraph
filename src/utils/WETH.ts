@@ -1,6 +1,7 @@
+import { ArbEthSSOVV2 } from "./../../generated/USDCWETHSwaps/ArbEthSSOVV2";
 import { UniswapV2Pair } from "./../../generated/JonesETHVaultV1/UniswapV2Pair";
 import { BigDecimal, log } from "@graphprotocol/graph-ts";
-import { WETHUSDC_SUSHI_PAIR } from "./../constants";
+import { ETH_SSOV_V2, WETHUSDC_SUSHI_PAIR } from "./../constants";
 import { Address } from "@graphprotocol/graph-ts";
 import { toDecimal } from "./Decimals";
 import { getUSDCDecimals } from "./USDC";
@@ -11,20 +12,7 @@ export const getWETHDecimals = (): number => {
 
 // Read the USD price from the WETH-USDC univ2 pair
 export const getWETHPrice = (): BigDecimal => {
-  const pairContract = UniswapV2Pair.bind(Address.fromString(WETHUSDC_SUSHI_PAIR));
-
-  const result = pairContract.try_getReserves();
-
-  if (result.reverted) {
-    return BigDecimal.fromString("0");
-  }
-
-  const reserve0 = result.value.value0; // weth
-  const reserve1 = result.value.value1; // usdc
-
-  const totWETH = toDecimal(reserve0, getWETHDecimals());
-  const totUSDC = toDecimal(reserve1, getUSDCDecimals());
-
-  const wethRate = totUSDC.div(totWETH);
-  return wethRate;
+  // use the dopex oracle
+  const ssov = ArbEthSSOVV2.bind(Address.fromString(ETH_SSOV_V2));
+  return toDecimal(ssov.getUsdPrice(), 8); // oracle decimals is 8
 };

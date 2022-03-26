@@ -1,5 +1,5 @@
 import { getVaultBalanceOf } from "./../helpers";
-import { BigDecimal, BigInt } from "@graphprotocol/graph-ts";
+import { BigDecimal, BigInt, log } from "@graphprotocol/graph-ts";
 import { Swap } from "../../generated/JonesETHVaultV1/UniswapV2Pair";
 import { ASSET_MGMT_MULTISIG } from "../constants";
 import { assetToJonesVaultV2, getVaultSnapshotBalanceOf, shouldReadAsset } from "../helpers";
@@ -42,6 +42,11 @@ export function handleSwap(event: Swap): void {
       const depositState = updateAndGetSSOVCallDepositsState(timestamp, dateStr, asset, userAddr);
       const purchaseState = updateAndGetSSOVCallPurchasesState(timestamp, dateStr, asset, userAddr);
 
+      // If there is no depositstate at this heartbeat, we dont do anything.
+      if (depositState == null) {
+        return;
+      }
+
       // For each asset, let's do the following:
       /**
        * 1. Get initial balance
@@ -57,6 +62,7 @@ export function handleSwap(event: Swap): void {
       const pnlMetric = loadOrCreateJonesVaultPnLMetric(timestamp, asset);
       if (depositState) {
         pnlMetric.epoch = depositState.epoch;
+        pnlMetric.assetPrice = depositState.assetPrice;
       }
 
       // 1
@@ -71,21 +77,19 @@ export function handleSwap(event: Swap): void {
       let depositPnl = BigDecimal.fromString("0");
       let totalDeposited = BigDecimal.fromString("0");
       if (depositState) {
-        const depositCalcs = calculateWrittenCallPnl(depositState);
-        depositPnl = depositCalcs[0];
-        totalDeposited = depositCalcs[1];
+        depositPnl = depositState.pnlUnderlying;
+        totalDeposited = depositState.summedUserDeposits;
       }
       const depositValue = totalDeposited.plus(depositPnl);
       pnlMetric.depositPnl = depositPnl;
       pnlMetric.totalAssetsDeposited = totalDeposited;
 
       // 4
-      const purchasesPnl =
-        purchaseState == null
-          ? BigDecimal.fromString("0")
-          : calculatePurchasedCallPnl(purchaseState);
-
-      pnlMetric.purchasePnl = purchasesPnl;
+      let purchasePnl = BigDecimal.fromString("0");
+      if (purchaseState) {
+        purchasePnl = purchaseState.pnlUnderlying;
+      }
+      pnlMetric.purchasePnl = purchasePnl;
 
       // 5
       let farmingDeposits = BigDecimal.fromString("0");
@@ -100,7 +104,9 @@ export function handleSwap(event: Swap): void {
       pnlMetric.totalAssetsFarming = farmingDeposits;
 
       // 6
-      // TODO (maybe do it in the frontend?)
+      const rewards =
+        depositState == null ? BigDecimal.fromString("0") : depositState.summedUserDepositRewards;
+      pnlMetric.rewardsPnl = rewards;
 
       // 7
       const currentAssetsIncludingPnl = unallocatedBalance

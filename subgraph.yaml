@@ -44,9 +44,7 @@ dataSources:
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - SSOVDeposit
-        - SSOVCallPurchase
-        - EpochStarted
+        - Random1
       abis:
         - name: ERC20
           file: ./abis/ERC20.json
@@ -71,16 +69,14 @@ dataSources:
     network: arbitrum-one
     source:
       address: "0xBa3386D94FC593a1e9A5b57fF02524396080f7b4"
-      abi: JonesArbETHVaultV2
+      abi: JonesDPXVaultV2
       startBlock: 6815880
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - SSOVDeposit
-        - SSOVCallPurchase
-        - EpochStarted
+        - Random2
       abis:
         - name: ERC20
           file: ./abis/ERC20.json
@@ -88,14 +84,16 @@ dataSources:
           file: ./abis/UniswapV2Pair.json
         - name: ArbEthSSOVV2
           file: ./abis/ArbEthSSOVV2.json
+        - name: DpxSSOVV2
+          file: ./abis/DpxSSOVV2.json
         - name: DpxCustomPriceOracle
           file: ./abis/DpxCustomPriceOracle.json
-        - name: JonesArbETHVaultV2
-          file: ./abis/JonesArbETHVaultV2.json
+        - name: JonesDPXVaultV2
+          file: ./abis/JonesDPXVaultV2.json
       eventHandlers:
-        - event: SSOVDeposit(indexed uint256,uint256,uint256)
+        - event: SSOVDeposit(indexed uint256,uint256,uint256,address)
           handler: handleJonesVaultDPXCallDeposit
-        - event: SSOVCallPurchase(indexed uint256,uint256,uint256,uint256,uint256)
+        - event: SSOVCallPurchase(indexed uint256,uint256,uint256,uint256,uint256,address)
           handler: handleJonesVaultDPXCallPurchase
         - event: EpochStarted(indexed uint256,uint256,uint256)
           handler: handleJonesVaultDPXEpochStarted
@@ -105,16 +103,14 @@ dataSources:
     network: arbitrum-one
     source:
       address: "0x9a62E407028961EaC4538453Cb5D97038b69C814"
-      abi: JonesArbETHVaultV2
+      abi: JonesGOHMVaultV2
       startBlock: 6815880
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - SSOVDeposit
-        - SSOVCallPurchase
-        - EpochStarted
+        - Random3
       abis:
         - name: ERC20
           file: ./abis/ERC20.json
@@ -122,14 +118,16 @@ dataSources:
           file: ./abis/UniswapV2Pair.json
         - name: ArbEthSSOVV2
           file: ./abis/ArbEthSSOVV2.json
+        - name: GohmSSOVV2
+          file: ./abis/GohmSSOVV2.json
         - name: DpxCustomPriceOracle
           file: ./abis/DpxCustomPriceOracle.json
-        - name: JonesArbETHVaultV2
-          file: ./abis/JonesArbETHVaultV2.json
+        - name: JonesGOHMVaultV2
+          file: ./abis/JonesGOHMVaultV2.json
       eventHandlers:
-        - event: SSOVDeposit(indexed uint256,uint256,uint256)
+        - event: SSOVDeposit(indexed uint256,uint256,uint256,address)
           handler: handleJonesVaultGOHMCallDeposit
-        - event: SSOVCallPurchase(indexed uint256,uint256,uint256,uint256,uint256)
+        - event: SSOVCallPurchase(indexed uint256,uint256,uint256,uint256,uint256,address)
           handler: handleJonesVaultGOHMCallPurchase
         - event: EpochStarted(indexed uint256,uint256,uint256)
           handler: handleJonesVaultGOHMEpochStarted

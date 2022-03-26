@@ -17,7 +17,13 @@ import {
  */
 
 export function handleJonesVaultETHCallDeposit(event: SSOVDeposit): void {
-  const metric = handleSSOVCallDeposit(event, "ETH");
+  const metric = handleSSOVCallDeposit(
+    event.block.timestamp,
+    event.params._strikeIndex,
+    event.params._epoch,
+    event.params._amount,
+    "ETH"
+  );
 
   const balanceMetric = loadOrCreateETHBalanceMetric();
   balanceMetric.balance = balanceMetric.balance.minus(metric.amount);
@@ -25,7 +31,15 @@ export function handleJonesVaultETHCallDeposit(event: SSOVDeposit): void {
 }
 
 export function handleJonesVaultETHCallPurchase(event: SSOVCallPurchase): void {
-  const metric = handleSSOVCallPurchase(event, "ETH");
+  const metric = handleSSOVCallPurchase(
+    event.block.timestamp,
+    event.params._strikeIndex,
+    event.params._epoch,
+    event.params._amount,
+    event.params._premium,
+    event.params._totalFee,
+    "ETH"
+  );
 
   const balanceMetric = loadOrCreateETHBalanceMetric();
   balanceMetric.balance = balanceMetric.balance.minus(metric.premium).minus(metric.totalFee);
@@ -33,7 +47,12 @@ export function handleJonesVaultETHCallPurchase(event: SSOVCallPurchase): void {
 }
 
 export function handleJonesVaultETHEpochStarted(event: EpochStarted): void {
-  const metric = handleEpochStarted(event, "ETH");
+  const metric = handleEpochStarted(
+    event.params._timestamp,
+    event.params._assetAmount,
+    event.params._jonesAssetSupply,
+    "ETH"
+  );
 
   // when the epoch starts, reset the ETH balance to the amount in this event
   const balanceMetric = loadOrCreateETHBalanceMetric();

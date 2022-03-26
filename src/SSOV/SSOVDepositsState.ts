@@ -27,6 +27,11 @@ export function loadOrCreateSSOVCallDepositsStateMetric(
     metric.totalFarmRewards = BigDecimal.fromString("0");
     metric.userFarmRewards = BigDecimal.fromString("0");
 
+    metric.pnlPercentage = BigDecimal.fromString("0");
+    metric.pnlUnderlying = BigDecimal.fromString("0");
+
+    metric.summedUserDepositRewards = BigDecimal.fromString("0");
+
     metric.save();
   }
 
