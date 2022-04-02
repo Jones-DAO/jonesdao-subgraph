@@ -1,17 +1,17 @@
-import { SSOVCallDepositsState, SSOVCallPurchasesState } from "./../../generated/schema";
-import { ArbEthSSOVV2 } from "./../../generated/ETHSSOV/ArbEthSSOVV2";
+import { SSOVCallDepositsState, SSOVCallPurchasesState } from "../../generated/schema";
+import { ArbEthSSOVV2 } from "../../generated/ETHSSOV/ArbEthSSOVV2";
 import { Address, BigDecimal, BigInt, log } from "@graphprotocol/graph-ts";
-import { loadOrCreateSSOVCallDepositsStateMetric } from "./SSOVDepositsState";
+import { loadOrCreateSSOVCallDepositsStateMetric } from "./SSOVCDepositsState";
 import {
   assetToDecimals,
   assetToSSOVC,
   bigIntListToBigDecimalList,
   sumBigDecimalArray
 } from "../helpers";
-import { loadOrCreateSSOVCallPurchasesStateMetric } from "./SSOVPurchasesState";
+import { loadOrCreateSSOVCallPurchasesStateMetric } from "./SSOVCPurchasesState";
 import { toDecimal } from "../utils/Decimals";
 import { getEarningsFromDPXFarm } from "../Farms/DPXFarm";
-import { DPX_REWARDS_DISTRIBUTION, DPX_SSOV_V2 } from "../constants";
+import { DPX_REWARDS_DISTRIBUTION, DPX_SSOVC_V2 } from "../constants";
 import { loadSummedJonesSSOVCallPurchaseMetric } from "../JonesVaults/VaultV2Metrics";
 import { calculatePurchasedCallPnl, calculateWrittenCallPnl } from "../PnL/PnLCalc";
 import { getDPXDecimals, getDPXUSDPrice } from "../utils/DPX";
@@ -93,7 +93,7 @@ export function updateAndGetSSOVCallDepositsState(
 
       if (asset === "DPX") {
         // Then we look at the farming stuff
-        const result = getEarningsFromDPXFarm(DPX_SSOV_V2);
+        const result = getEarningsFromDPXFarm(DPX_SSOVC_V2);
         const userDPXEarned = result[1].times(metric.summedOwnership);
         metric.totalFarmRewards = result[1];
         metric.userFarmRewards = userDPXEarned;
@@ -117,7 +117,7 @@ export function updateAndGetSSOVCallDepositsState(
         const rewardsDistributorTotalOwnership = summedRewardsDistributorDeposits.div(
           summedTotalDPXSSOVDeposits
         );
-        const result = getEarningsFromDPXFarm(DPX_SSOV_V2);
+        const result = getEarningsFromDPXFarm(DPX_SSOVC_V2);
         const totalDPXFarmingFromSSOV = result[0].plus(result[1]); // deposits + rewards (in DPX terms)
         const rewardsAvailableInDPX = rewardsDistributorTotalOwnership.times(
           totalDPXFarmingFromSSOV

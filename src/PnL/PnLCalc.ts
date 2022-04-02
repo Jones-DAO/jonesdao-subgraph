@@ -1,8 +1,14 @@
 import { BigDecimal, log } from "@graphprotocol/graph-ts";
-import { SSOVCallDepositsState, SSOVCallPurchasesState } from "../../generated/schema";
+import {
+  SSOVCallDepositsState,
+  SSOVCallPurchasesState,
+  SSOVPutDepositsState
+} from "../../generated/schema";
 import { DOPEX_EXERCISE_FEE } from "../constants";
 
 const ZERO = BigDecimal.fromString("0");
+
+// ------------ Calls ------------
 
 /**
  *
@@ -23,7 +29,7 @@ export function calculateWrittenCallPnl(deposits: SSOVCallDepositsState): BigDec
       totalPremiumGained = totalPremiumGained.plus(deposits.userPremiums[i]);
       let profitAtStrike = deposits.userPremiums[i];
       let lossAtStrike = strike.lt(price)
-        ? getVaultPnL(price, strike, amount)
+        ? getCallDepositPnl(price, strike, amount)
         : BigDecimal.fromString("0");
 
       totalProfit = totalProfit.plus(profitAtStrike).minus(lossAtStrike);
@@ -70,7 +76,11 @@ export function calculatePurchasedCallPnl(purchases: SSOVCallPurchasesState): Bi
 }
 
 /* https://docs.dopex.io/single-staking-options-vault-ssov */
-export function getVaultPnL(price: BigDecimal, strike: BigDecimal, amount: BigDecimal): BigDecimal {
+export function getCallDepositPnl(
+  price: BigDecimal,
+  strike: BigDecimal,
+  amount: BigDecimal
+): BigDecimal {
   //((price - strike) * amount) / price;
   const diff = price.minus(strike);
   const diffTimesAmount = diff.times(amount);

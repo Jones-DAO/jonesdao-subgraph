@@ -7,15 +7,109 @@ type JAssetMetric @entity {
   AssetPrice: BigDecimal!
 }
 
-type SSOVPutDeposit @entity {
+# ------ PUTS --------
+type JonesSSOVPutDeposit @entity {
+  id: ID!
+  timestamp: BigInt!
+  asset: String!
+  epoch: BigInt!
+  strikeIndex: BigInt!
+  amount: BigDecimal!
+}
+
+type JonesSSOVPutPurchase @entity {
+  id: ID!
+  timestamp: BigInt!
+  asset: String!
+  epoch: BigInt!
+  strikeIndex: BigInt!
+  amount: BigDecimal!
+  premium: BigDecimal!
+  totalFee: BigDecimal!
+}
+
+type SSOVPutDepositsState @entity {
   id: ID!
   timestamp: BigInt!
   epoch: BigInt!
   asset: String!
-  strike: BigInt!
-  amount: BigInt!
-  user: Bytes!
-  sender: Bytes!
+  strikes: [BigDecimal!]!
+  ownership: [BigDecimal!]!
+  totalDeposits: [BigDecimal!]!
+  userDeposits: [BigDecimal!]!
+  summedTotalDeposits: BigDecimal!
+  summedUserDeposits: BigDecimal!
+  summedOwnership: BigDecimal!
+  userPremiums: [BigDecimal!]!
+  assetPrice: BigDecimal!
+  positionsValueInUnderlying: BigDecimal!
+  user: String!
+}
+
+type SSOVPutPurchasesState @entity {
+  id: ID!
+  timestamp: BigInt!
+  epoch: BigInt!
+  asset: String!
+  strikes: [BigDecimal!]!
+  putsPurchased: [BigDecimal!]!
+  premiumsPaid: [BigDecimal!]!
+  feesPaid: [BigDecimal!]!
+  costToExercise: [BigDecimal!]!
+  assetPrice: BigDecimal!
+  totalPremiumsPaid: BigDecimal!
+  totalFeesPaid: BigDecimal!
+  positionsValueInUnderlying: BigDecimal!
+  user: String!
+}
+
+type SummedJonesSSOVPutPurchase @entity {
+  id: ID!
+  asset: String!
+  epoch: BigInt!
+  strikes: [BigInt!]!
+  putsPurchased: [BigDecimal!]!
+  premiumsPaid: [BigDecimal!]!
+  feesPaid: [BigDecimal!]!
+  costToExercise: [BigDecimal!]!
+  totalPremiumsPaid: BigDecimal!
+  totalFeesPaid: BigDecimal!
+  totalCostToExercise: BigDecimal!
+}
+
+# ------------- Calls ------------
+type JonesSSOVCallPurchase @entity {
+  id: ID!
+  timestamp: BigInt!
+  asset: String!
+  epoch: BigInt!
+  strikeIndex: BigInt!
+  amount: BigDecimal!
+  premium: BigDecimal!
+  totalFee: BigDecimal!
+}
+
+type SummedJonesSSOVCallPurchase @entity {
+  id: ID!
+  asset: String!
+  epoch: BigInt!
+  strikes: [BigInt!]!
+  callsPurchased: [BigDecimal!]!
+  premiumsPaid: [BigDecimal!]!
+  feesPaid: [BigDecimal!]!
+  costToExercise: [BigDecimal!]!
+  totalPremiumsPaid: BigDecimal!
+  totalFeesPaid: BigDecimal!
+  totalCostToExercise: BigDecimal!
+}
+
+type JonesSSOVCallDeposit @entity {
+  id: ID!
+  timestamp: BigInt!
+  asset: String!
+  epoch: BigInt!
+  strikeIndex: BigInt!
+  amount: BigDecimal!
 }
 
 type SSOVCallDepositsState @entity {
@@ -39,19 +133,6 @@ type SSOVCallDepositsState @entity {
   summedUserDepositRewards: BigDecimal!
   assetPrice: BigDecimal!
   user: String!
-}
-
-type SSOVPutPurchase @entity {
-  id: ID!
-  timestamp: BigInt!
-  epoch: BigInt!
-  asset: String!
-  strike: BigInt!
-  amount: BigInt!
-  fee: BigInt!
-  premium: BigInt!
-  user: Bytes!
-  sender: Bytes!
 }
 
 type SSOVCallPurchasesState @entity {
@@ -91,9 +172,11 @@ type JonesVaultPnL @entity {
   asset: String!
   pnlPercentage: BigDecimal!
   pnlUnderlying: BigDecimal!
-  totalAssetsDeposited: BigDecimal!
-  depositPnl: BigDecimal!
-  purchasePnl: BigDecimal!
+  totalSSOVCAssetsDeposited: BigDecimal!
+  SSOVCDepositPnl: BigDecimal!
+  SSOVCPurchasePnl: BigDecimal!
+  SSOVPDepositsValue: BigDecimal!
+  SSOVPPurchasesValue: BigDecimal!
   totalAssetsFarming: BigDecimal!
   farmPnl: BigDecimal!
   rewardsPnl: BigDecimal!
@@ -103,45 +186,12 @@ type JonesVaultPnL @entity {
   assetPrice: BigDecimal!
 }
 
-type JonesSSOVCallPurchase @entity {
-  id: ID!
-  timestamp: BigInt!
-  asset: String!
-  epoch: BigInt!
-  strikeIndex: BigInt!
-  amount: BigDecimal!
-  premium: BigDecimal!
-  totalFee: BigDecimal!
-}
-
-type SummedJonesSSOVCallPurchase @entity {
-  id: ID!
-  asset: String!
-  epoch: BigInt!
-  strikes: [BigInt!]!
-  callsPurchased: [BigDecimal!]!
-  premiumsPaid: [BigDecimal!]!
-  feesPaid: [BigDecimal!]!
-  costToExercise: [BigDecimal!]!
-  totalPremiumsPaid: BigDecimal!
-  totalFeesPaid: BigDecimal!
-  totalCostToExercise: BigDecimal!
-}
-
-type JonesSSOVCallDeposit @entity {
-  id: ID!
-  timestamp: BigInt!
-  asset: String!
-  epoch: BigInt!
-  strikeIndex: BigInt!
-  amount: BigDecimal!
-}
-
 type JonesEpochStarted @entity {
   id: ID!
   timestamp: BigInt!
   asset: String!
-  epoch: BigInt!
+  ssovcEpoch: BigInt!
+  ssovpEpoch: BigInt!
   amount: BigDecimal!
   jAssetAmount: BigDecimal!
 }

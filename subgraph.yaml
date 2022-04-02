@@ -8,7 +8,7 @@ dataSources:
     source:
       address: "0xe8EE01aE5959D3231506FcDeF2d5F3E85987a39c"
       abi: UniswapV2Pair
-      startBlock: 6815880
+      startBlock: 8835831
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -22,6 +22,8 @@ dataSources:
           file: ./abis/UniswapV2Pair.json
         - name: ArbEthSSOVV2
           file: ./abis/ArbEthSSOVV2.json
+        - name: Curve2PoolSsovPut
+          file: ./abis/Curve2PoolSsovPut.json
         - name: DpxCustomPriceOracle
           file: ./abis/DpxCustomPriceOracle.json
         - name: StakingRewards
@@ -36,9 +38,9 @@ dataSources:
     name: JonesETHVaultV2
     network: arbitrum-one
     source:
-      address: "0x6be861aA87009331bF62E22D418Ab666e88B1354"
+      address: "0xD126F379D998B8C32CcDc55c49260685867535F8"
       abi: JonesArbETHVaultV2
-      startBlock: 6815880
+      startBlock: 8835831
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -52,6 +54,8 @@ dataSources:
           file: ./abis/UniswapV2Pair.json
         - name: ArbEthSSOVV2
           file: ./abis/ArbEthSSOVV2.json
+        - name: Curve2PoolSsovPut
+          file: ./abis/Curve2PoolSsovPut.json
         - name: DpxCustomPriceOracle
           file: ./abis/DpxCustomPriceOracle.json
         - name: JonesArbETHVaultV2
@@ -61,6 +65,10 @@ dataSources:
           handler: handleJonesVaultETHCallDeposit
         - event: SSOVCallPurchase(indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleJonesVaultETHCallPurchase
+        - event: SSOVPDeposit(indexed uint256,uint256,uint256)
+          handler: handleJonesVaultETHPutDeposit
+        - event: SSOVPutPurchase(indexed uint256,uint256,uint256,uint256,uint256)
+          handler: handleJonesVaultETHPutPurchase
         - event: EpochStarted(indexed uint256,uint256,uint256)
           handler: handleJonesVaultETHEpochStarted
       file: ./src/JonesVaults/ETHVaultV2/ETHVaultV2Handler.ts
@@ -68,9 +76,9 @@ dataSources:
     name: JonesDPXVaultV2
     network: arbitrum-one
     source:
-      address: "0xBa3386D94FC593a1e9A5b57fF02524396080f7b4"
-      abi: JonesDPXVaultV2
-      startBlock: 6815880
+      address: "0x211C70f7783fb4018C92BECeCD92179AecF7c221"
+      abi: JonesTokenVaultV2
+      startBlock: 8835831
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -84,17 +92,23 @@ dataSources:
           file: ./abis/UniswapV2Pair.json
         - name: ArbEthSSOVV2
           file: ./abis/ArbEthSSOVV2.json
+        - name: Curve2PoolSsovPut
+          file: ./abis/Curve2PoolSsovPut.json
         - name: DpxSSOVV2
           file: ./abis/DpxSSOVV2.json
         - name: DpxCustomPriceOracle
           file: ./abis/DpxCustomPriceOracle.json
-        - name: JonesDPXVaultV2
-          file: ./abis/JonesDPXVaultV2.json
+        - name: JonesTokenVaultV2
+          file: ./abis/JonesTokenVaultV2.json
       eventHandlers:
         - event: SSOVDeposit(indexed uint256,uint256,uint256,address)
           handler: handleJonesVaultDPXCallDeposit
         - event: SSOVCallPurchase(indexed uint256,uint256,uint256,uint256,uint256,address)
           handler: handleJonesVaultDPXCallPurchase
+        - event: SSOVPDeposit(indexed uint256,uint256,uint256)
+          handler: handleJonesVaultDPXPutDeposit
+        - event: SSOVPutPurchase(indexed uint256,uint256,uint256,uint256,uint256,address)
+          handler: handleJonesVaultDPXPutPurchase
         - event: EpochStarted(indexed uint256,uint256,uint256)
           handler: handleJonesVaultDPXEpochStarted
       file: ./src/JonesVaults/DPXVaultV2/DPXVaultV2Handler.ts
@@ -102,9 +116,9 @@ dataSources:
     name: JonesGOHMVaultV2
     network: arbitrum-one
     source:
-      address: "0x9a62E407028961EaC4538453Cb5D97038b69C814"
-      abi: JonesGOHMVaultV2
-      startBlock: 6815880
+      address: "0xa0f154bB6D0e09ad04a85A1C6ca347D56e4D76ba"
+      abi: JonesTokenVaultV2
+      startBlock: 8835831
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -118,17 +132,23 @@ dataSources:
           file: ./abis/UniswapV2Pair.json
         - name: ArbEthSSOVV2
           file: ./abis/ArbEthSSOVV2.json
+        - name: Curve2PoolSsovPut
+          file: ./abis/Curve2PoolSsovPut.json
         - name: GohmSSOVV2
           file: ./abis/GohmSSOVV2.json
         - name: DpxCustomPriceOracle
           file: ./abis/DpxCustomPriceOracle.json
-        - name: JonesGOHMVaultV2
-          file: ./abis/JonesGOHMVaultV2.json
+        - name: JonesTokenVaultV2
+          file: ./abis/JonesTokenVaultV2.json
       eventHandlers:
         - event: SSOVDeposit(indexed uint256,uint256,uint256,address)
           handler: handleJonesVaultGOHMCallDeposit
         - event: SSOVCallPurchase(indexed uint256,uint256,uint256,uint256,uint256,address)
           handler: handleJonesVaultGOHMCallPurchase
+        - event: SSOVPDeposit(indexed uint256,uint256,uint256)
+          handler: handleJonesVaultGOHMPutDeposit
+        - event: SSOVPutPurchase(indexed uint256,uint256,uint256,uint256,uint256,address)
+          handler: handleJonesVaultGOHMPutPurchase
         - event: EpochStarted(indexed uint256,uint256,uint256)
           handler: handleJonesVaultGOHMEpochStarted
       file: ./src/JonesVaults/GOHMVaultV2/GOHMVaultV2Handler.ts

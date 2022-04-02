@@ -138,6 +138,10 @@ export class SSOVDeposit__Params {
   get _amount(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
+
+  get _token(): Address {
+    return this._event.parameters[3].value.toAddress();
+  }
 }
 
 export class SSOVCallPurchase extends ethereum.Event {
@@ -171,6 +175,10 @@ export class SSOVCallPurchase__Params {
 
   get _totalFee(): BigInt {
     return this._event.parameters[4].value.toBigInt();
+  }
+
+  get _token(): Address {
+    return this._event.parameters[5].value.toAddress();
   }
 }
 
@@ -231,6 +239,10 @@ export class SSOVPutPurchase__Params {
 
   get _totalFee(): BigInt {
     return this._event.parameters[4].value.toBigInt();
+  }
+
+  get _token(): Address {
+    return this._event.parameters[5].value.toAddress();
   }
 }
 
@@ -304,9 +316,9 @@ export class WhitelistUpdate__Params {
   }
 }
 
-export class JonesArbETHVaultV2 extends ethereum.SmartContract {
-  static bind(address: Address): JonesArbETHVaultV2 {
-    return new JonesArbETHVaultV2("JonesArbETHVaultV2", address);
+export class JonesTokenVaultV2 extends ethereum.SmartContract {
+  static bind(address: Address): JonesTokenVaultV2 {
+    return new JonesTokenVaultV2("JonesTokenVaultV2", address);
   }
 
   MANAGEMENT_WINDOW_OPEN(): boolean {

@@ -174,6 +174,66 @@ export class SSOVCallPurchase__Params {
   }
 }
 
+export class SSOVPDeposit extends ethereum.Event {
+  get params(): SSOVPDeposit__Params {
+    return new SSOVPDeposit__Params(this);
+  }
+}
+
+export class SSOVPDeposit__Params {
+  _event: SSOVPDeposit;
+
+  constructor(event: SSOVPDeposit) {
+    this._event = event;
+  }
+
+  get _epoch(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get _strikeIndex(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get _amount(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+}
+
+export class SSOVPutPurchase extends ethereum.Event {
+  get params(): SSOVPutPurchase__Params {
+    return new SSOVPutPurchase__Params(this);
+  }
+}
+
+export class SSOVPutPurchase__Params {
+  _event: SSOVPutPurchase;
+
+  constructor(event: SSOVPutPurchase) {
+    this._event = event;
+  }
+
+  get _epoch(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get _strikeIndex(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get _amount(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+
+  get _premium(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
+  }
+
+  get _totalFee(): BigInt {
+    return this._event.parameters[4].value.toBigInt();
+  }
+}
+
 export class OwnershipTransferred extends ethereum.Event {
   get params(): OwnershipTransferred__Params {
     return new OwnershipTransferred__Params(this);

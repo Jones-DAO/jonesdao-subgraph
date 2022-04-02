@@ -1,3 +1,4 @@
+import { Curve2PoolSsovPut } from "./../generated/Curve2PoolSsovPutGOHM/Curve2PoolSsovPut";
 import { ERC20 } from "./../generated/JonesETHVaultV1/ERC20";
 import { UniswapV2Pair } from "./../generated/JonesETHVaultV1/UniswapV2Pair";
 import { ArbEthSSOVV2 } from "./../generated/ETHSSOV/ArbEthSSOVV2";
@@ -6,17 +7,20 @@ import {
   JONES_DPX_VAULT_V2,
   JONES_ETH_VAULT_V2,
   JONES_GOHM_VAULT_V2,
-  ETH_SSOV_V2,
-  DPX_SSOV_V2,
+  ETH_SSOVC_V2,
+  DPX_SSOVC_V2,
   JONES_ETH_STARTBLOCK,
   JONES_GOHM_STARTBLOCK,
   JONES_DPX_STARTBLOCK,
-  GOHM_SSOV_V2,
+  GOHM_SSOVC_V2,
   JETHETH_SUSHI_PAIR,
   JGOHMGOHM_SUSHI_PAIR,
   DPXJDPX_SUSHI_PAIR,
   GOHM,
-  DPX
+  DPX,
+  ETH_SSOVP_V2,
+  GOHM_SSOVP_V2,
+  DPX_SSOVP_V2
 } from "./constants";
 import { toDecimal } from "./utils/Decimals";
 import { loadOrCreateETHBalanceMetric } from "./JonesVaults/ETHVaultV2/ETHVaultBalanceMetric";
@@ -74,16 +78,29 @@ export const assetToJAssetLP = (asset: string): string => {
 
 export const assetToSSOVC = (asset: string): string => {
   if (asset === "ETH") {
-    return ETH_SSOV_V2;
+    return ETH_SSOVC_V2;
   } else if (asset === "GOHM") {
-    return GOHM_SSOV_V2;
+    return GOHM_SSOVC_V2;
   } else if (asset === "DPX") {
-    return DPX_SSOV_V2;
+    return DPX_SSOVC_V2;
   } else {
     return "";
   }
 };
 
+export const assetToSSOVP = (asset: string): string => {
+  if (asset === "ETH") {
+    return ETH_SSOVP_V2;
+  } else if (asset === "GOHM") {
+    return GOHM_SSOVP_V2;
+  } else if (asset === "DPX") {
+    return DPX_SSOVP_V2;
+  } else {
+    return "";
+  }
+};
+
+// not really used right now
 export const assetToStartBlock = (asset: string): BigInt => {
   let block = "";
   if (asset === "ETH") {
@@ -107,6 +124,16 @@ export const shouldReadAsset = (asset: string, block: BigInt): boolean => {
 
 export const getAssetPriceFromSSOVC = (asset: string): BigDecimal => {
   const ssov = ArbEthSSOVV2.bind(Address.fromString(assetToSSOVC(asset)));
+  const maybePrice = ssov.try_getUsdPrice();
+  if (maybePrice.reverted) {
+    return BigDecimal.fromString("0");
+  } else {
+    return toDecimal(maybePrice.value, 8);
+  }
+};
+
+export const getAssetPriceFromSSOVP = (asset: string): BigDecimal => {
+  const ssov = Curve2PoolSsovPut.bind(Address.fromString(assetToSSOVP(asset)));
   const maybePrice = ssov.try_getUsdPrice();
   if (maybePrice.reverted) {
     return BigDecimal.fromString("0");
@@ -212,4 +239,8 @@ export const plusBigDecimalAtIndex = (
     newArr.push(newValueAtIndex);
   }
   return newArr;
+};
+
+export const getCombinedEpochID = (ssovcEpoch: BigInt, ssovpEpoch: BigInt): string => {
+  return `${ssovcEpoch.toString()}-${ssovpEpoch.toString()}`;
 };
