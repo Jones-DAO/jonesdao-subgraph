@@ -185,7 +185,6 @@ type JonesVaultPnL @entity {
   SSOVPPurchasesValue: BigDecimal!
   totalAssetsFarming: BigDecimal!
   farmPnl: BigDecimal!
-  rewardsPnl: BigDecimal!
   epochStartingAssets: BigDecimal!
   unallocatedAssets: BigDecimal!
   currentAssetsWithPnl: BigDecimal!

@@ -1681,7 +1681,6 @@ export class JonesVaultPnL extends Entity {
     this.set("SSOVPPurchasesValue", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("totalAssetsFarming", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("farmPnl", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("rewardsPnl", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("epochStartingAssets", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("unallocatedAssets", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("currentAssetsWithPnl", Value.fromBigDecimal(BigDecimal.zero()));
@@ -1829,15 +1828,6 @@ export class JonesVaultPnL extends Entity {
 
   set farmPnl(value: BigDecimal) {
     this.set("farmPnl", Value.fromBigDecimal(value));
-  }
-
-  get rewardsPnl(): BigDecimal {
-    let value = this.get("rewardsPnl");
-    return value!.toBigDecimal();
-  }
-
-  set rewardsPnl(value: BigDecimal) {
-    this.set("rewardsPnl", Value.fromBigDecimal(value));
   }
 
   get epochStartingAssets(): BigDecimal {

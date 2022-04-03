@@ -1,0 +1,20 @@
+{
+    "id": "1648983901DPX",
+    "timestamp": "1648983901",
+    "dateStr": "2022-04-03T11",
+    "epoch": "3",
+    "asset": "DPX",
+    "epochStartingAssets": "1831.439106668567642144",
+    "unallocatedAssets": "6.789744858289638053",
+    "totalSSOVCAssetsDeposited": "0",
+    "SSOVCDepositPnl": "0",
+    "SSOVCPurchasePnl": "-2.515660854105765363",
+    "SSOVPDepositsValue": "0",
+    "SSOVPPurchasesValue": "0",
+    "pnlPercentage": "0.0009155097462104288133826240886365671",
+    "pnlUnderlying": "1.676700351745994826241872127853",
+    "totalAssetsFarming": "1822",
+    "farmPnl": "4.326062162023998917241872127853203",
+    "rewardsPnl": "0",
+    "currentAssetsWithPnl": "1833.115807020313636970241872127853"
+}

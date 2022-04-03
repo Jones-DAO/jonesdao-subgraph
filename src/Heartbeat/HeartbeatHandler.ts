@@ -110,7 +110,7 @@ export function handleSwap(event: Swap): void {
         ssovcDepositPnl = ssovcDepositState.pnlUnderlying;
         ssovcTotalDeposited = ssovcDepositState.summedUserDeposits;
       }
-      const depositValue = ssovcTotalDeposited.plus(ssovcDepositPnl);
+      const ssovcDepositValue = ssovcTotalDeposited.plus(ssovcDepositPnl);
       pnlMetric.SSOVCDepositPnl = ssovcDepositPnl;
       pnlMetric.totalSSOVCAssetsDeposited = ssovcTotalDeposited;
 
@@ -146,17 +146,12 @@ export function handleSwap(event: Swap): void {
       pnlMetric.totalAssetsFarming = farmingDeposits;
 
       // 7
-      // For now only happens for ssovc
-      const rewards =
-        ssovcDepositState == null
-          ? BigDecimal.fromString("0")
-          : ssovcDepositState.summedUserDepositRewards;
-      pnlMetric.rewardsPnl = rewards;
+      // Is baked into the ssovcDepositValue
 
       // 8
       const currentAssetsIncludingPnl = unallocatedBalance
         .plus(farmingDeposits)
-        .plus(depositValue)
+        .plus(ssovcDepositValue)
         .plus(farmingPnl)
         .plus(ssovpPurchasesValue)
         .plus(ssovpDepositsValue);
