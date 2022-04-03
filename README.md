@@ -11,9 +11,11 @@ This subgraph is hosted on the hosted service. You can play around with it yours
 3. [jAssets](#jassets)
 4. [SSOVC Deposits](#ssovcdeposits)
 5. [SSOVC Purchases](#ssovcpurchases)
-6. [PnL](#pnl)
-7. [Local development](#localdevelopment)
-8. [Deployment](#deployment)
+6. [SSOVP Deposits](#ssovpdeposits)
+7. [SSOVP Purchases](#ssovppurchases)
+8. [PnL](#pnl)
+9. [Local development](#localdevelopment)
+10. [Deployment](#deployment)
 
 ## Heartbeat
 
