@@ -8,16 +8,14 @@ import {
   updateAndGetSSOVCallDepositsState,
   updateAndGetSSOVCallPurchasesState
 } from "../SSOVC/SSOVCHandler";
-import { timestampToISODateString, timestampToISOHourString } from "../utils/Date";
+import { timestampToISOHourString } from "../utils/Date";
 import { loadOrCreateHeartbeat } from "./HeartbeatMetric";
-import { calculatePurchasedCallPnl, calculateWrittenCallPnl } from "../PnL/PnLCalc";
 import { getEarningsFromDPXFarm } from "../Farms/DPXFarm";
 import { loadOrCreateJonesVaultPnLMetric } from "../PnL/PnlMetric";
 import {
   updateAndGetSSOVPutDepositsState,
   updateAndGetSSOVPutPurchasesState
 } from "../SSOVP/SSOVPHandler";
-import { SSOVPutDepositsState, SSOVPutPurchasesState } from "../../generated/schema";
 
 const assets: string[] = ["ETH", "DPX", "GOHM"];
 const lastBlockOfJonesAsstMgmtMultisig = "7209882";
@@ -25,7 +23,10 @@ const lastBlockOfJonesAsstMgmtMultisig = "7209882";
 export function handleSwap(event: Swap): void {
   // Just do something
   const timestamp = event.block.timestamp;
-  const dateStr = timestampToISODateString(timestamp);
+
+  // The dateStr, as in kinda 2022-01-01T03 is the ID of the heartbeat. If you want to increase precision, make the ID
+  // use minutes as well for example: 2022-01-01T03:00/30 etc.
+  const dateStr = timestampToISOHourString(timestamp);
   const heartbeat = loadOrCreateHeartbeat(dateStr, timestamp);
 
   // we've already done stuff for this heartbeat.
@@ -57,26 +58,18 @@ export function handleSwap(event: Swap): void {
         userAddr
       );
 
-      let ssovpDepositsState: SSOVPutDepositsState | null = null;
-      let ssovpPurchasesState: SSOVPutPurchasesState | null = null;
-
-      if (asset === "ETH") {
-        // for testing for now!
-        const testEthPutDepositAddr = "0xB0767b217FB1530b064bB1F835C57c047c08aE72";
-        const testEthPutPurchaseAddr = "0x654FBf1704832E5902c307C7127Ca4139d429857";
-        ssovpDepositsState = updateAndGetSSOVPutDepositsState(
-          timestamp,
-          dateStr,
-          asset,
-          testEthPutDepositAddr
-        );
-        ssovpPurchasesState = updateAndGetSSOVPutPurchasesState(
-          timestamp,
-          dateStr,
-          asset,
-          testEthPutPurchaseAddr
-        );
-      }
+      const ssovpDepositsState = updateAndGetSSOVPutDepositsState(
+        timestamp,
+        dateStr,
+        asset,
+        userAddr
+      );
+      const ssovpPurchasesState = updateAndGetSSOVPutPurchasesState(
+        timestamp,
+        dateStr,
+        asset,
+        userAddr
+      );
 
       // If there is no ssovcDepositState at this heartbeat, we dont do anything.
       if (ssovcDepositState == null) {
@@ -96,7 +89,7 @@ export function handleSwap(event: Swap): void {
        * 9. Get PnL by comparing. Save
        */
 
-      const pnlMetric = loadOrCreateJonesVaultPnLMetric(timestamp, asset);
+      const pnlMetric = loadOrCreateJonesVaultPnLMetric(timestamp, dateStr, asset);
       if (ssovcDepositState) {
         pnlMetric.epoch = ssovcDepositState.epoch;
         pnlMetric.assetPrice = ssovcDepositState.assetPrice;

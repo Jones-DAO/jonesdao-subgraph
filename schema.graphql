@@ -41,6 +41,11 @@ type SSOVPutDepositsState @entity {
   summedUserDeposits: BigDecimal!
   summedOwnership: BigDecimal!
   userPremiums: [BigDecimal!]!
+  summedUserPremiums: BigDecimal!
+  totalPremiums: BigDecimal!
+  crvRewards: BigDecimal!
+  crvRewardsInUSD: BigDecimal!
+  crvRewardsInUnderlying: BigDecimal!
   assetPrice: BigDecimal!
   positionsValueInUnderlying: BigDecimal!
   user: String!
@@ -168,6 +173,7 @@ type ETHBalance @entity {
 type JonesVaultPnL @entity {
   id: ID!
   timestamp: BigInt!
+  dateStr: String!
   epoch: BigInt!
   asset: String!
   pnlPercentage: BigDecimal!

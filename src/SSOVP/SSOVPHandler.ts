@@ -1,5 +1,6 @@
+import { CurveGauge } from "./../../generated/JonesETHVaultV2/CurveGauge";
 import { SSOVPutDepositsState, SSOVPutPurchasesState } from "../../generated/schema";
-import { Address, BigDecimal, BigInt, log } from "@graphprotocol/graph-ts";
+import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 import { loadOrCreateSSOVPutDepositsStateMetric } from "./SSOVPDepositsState";
 import {
   assetToDecimals,
@@ -9,9 +10,11 @@ import {
 } from "../helpers";
 import { loadOrCreateSSOVPutPurchasesStateMetric } from "./SSOVPPurchasesState";
 import { toDecimal } from "../utils/Decimals";
-import { loadSummedJonesSSOVCallPurchaseMetric } from "../JonesVaults/VaultV2Metrics";
 import { Curve2PoolSsovPut } from "../../generated/JonesETHVaultV2/Curve2PoolSsovPut";
 import { get2CRVDecimals } from "../utils/2CRV";
+import { CRV, CURVE_2CRV_GAUGE } from "../constants";
+import { getCRVDecimals, getCRVUSDPrice } from "../utils/CRV";
+import { loadSummedJonesSSOVPutPurchaseMetric } from "../JonesVaults/VaultV2Metrics";
 
 const ZERO = BigDecimal.fromString("0");
 
@@ -48,6 +51,11 @@ export function updateAndGetSSOVPutDepositsState(
   const maybeStrikes = ssov.try_getEpochStrikes(epoch);
   if (!maybeStrikes.reverted) {
     metric.strikes = bigIntListToBigDecimalList(maybeStrikes.value, 8);
+  }
+
+  const maybeAssetPrice = ssov.try_getUsdPrice();
+  if (!maybeAssetPrice.reverted) {
+    metric.assetPrice = toDecimal(maybeAssetPrice.value, 8);
   }
 
   const maybeTotalDeposits = ssov.try_getTotalEpochStrikeDeposits(epoch);
@@ -91,6 +99,7 @@ export function updateAndGetSSOVPutDepositsState(
     // eg [2400000000, 2700000000] or so
     const strikes = maybeStrikes.value;
     const newUserPremiums: BigDecimal[] = [];
+    let summedUserPremiums = BigDecimal.fromString("0");
     for (let i = 0; i < metric.userDeposits.length; i++) {
       const userDeposit = metric.userDeposits[i];
       if (userDeposit.equals(ZERO)) {
@@ -102,15 +111,36 @@ export function updateAndGetSSOVPutDepositsState(
         const decimalTotalPremiumsAtStrike = toDecimal(totalPremiumsAtStrike, get2CRVDecimals());
         const userPremiumsAtStrike = userStrikeOwnership.times(decimalTotalPremiumsAtStrike);
         newUserPremiums.push(userPremiumsAtStrike);
+        summedUserPremiums = summedUserPremiums.plus(userPremiumsAtStrike);
       }
     }
 
     metric.userPremiums = newUserPremiums;
-  }
+    metric.summedUserPremiums = summedUserPremiums;
+    metric.totalPremiums = toDecimal(ssov.totalEpochPremium(epoch), get2CRVDecimals());
 
-  const maybeAssetPrice = ssov.try_getUsdPrice();
-  if (!maybeAssetPrice.reverted) {
-    metric.assetPrice = toDecimal(maybeAssetPrice.value, 8);
+    // let's read the total CRV rewards for the SSOVP
+    const curveGauge = CurveGauge.bind(Address.fromString(CURVE_2CRV_GAUGE));
+    const claimableCRVInt = curveGauge.claimable_reward(
+      Address.fromString(assetToSSOVP(asset)),
+      Address.fromString(CRV)
+    );
+    const claimableCRV = toDecimal(claimableCRVInt, getCRVDecimals());
+
+    // total deposits and premiums
+    const totalDepositsAndPremiums = summedTotalDeposits.plus(metric.totalPremiums);
+    const userDepositsAndPremiums = summedUserPremiums.plus(summedUserDeposits);
+
+    if (!userDepositsAndPremiums.equals(ZERO) && !claimableCRV.equals(ZERO)) {
+      const userShareOfCRVRewards = userDepositsAndPremiums.div(totalDepositsAndPremiums);
+      const userCRV = claimableCRV.times(userShareOfCRVRewards);
+      const userCRVInUSD = userCRV.times(getCRVUSDPrice());
+      const userCRVInAsset = userCRVInUSD.div(metric.assetPrice);
+
+      metric.crvRewards = userCRV;
+      metric.crvRewardsInUSD = userCRVInUSD;
+      metric.crvRewardsInUnderlying = userCRVInAsset;
+    }
   }
 
   // Pnl calcs ish
@@ -143,7 +173,7 @@ export function updateAndGetSSOVPutDepositsState(
     }
   }
 
-  metric.positionsValueInUnderlying = putInUnderlying;
+  metric.positionsValueInUnderlying = putInUnderlying.plus(metric.crvRewardsInUnderlying);
 
   metric.save();
   return metric;
@@ -226,14 +256,14 @@ export function updateAndGetSSOVPutPurchasesState(
   metric.positionsValueInUnderlying = profitsInUnderlying;
 
   // lets get the fee breakdown as well
-  // const maybePurchasesMetric = loadSummedJonesSSOVCallPurchaseMetric(asset, epoch);
-  // if (maybePurchasesMetric != null) {
-  //   metric.feesPaid = maybePurchasesMetric.feesPaid;
-  //   metric.costToExercise = maybePurchasesMetric.costToExercise;
-  // }
+  const maybePurchasesMetric = loadSummedJonesSSOVPutPurchaseMetric(asset, epoch);
+  if (maybePurchasesMetric != null) {
+    metric.feesPaid = maybePurchasesMetric.feesPaid;
+    metric.costToExercise = maybePurchasesMetric.costToExercise;
+  }
 
   metric.totalPremiumsPaid = sumBigDecimalArray(metric.premiumsPaid);
-  //metric.totalFeesPaid = sumBigDecimalArray(metric.feesPaid);
+  metric.totalFeesPaid = sumBigDecimalArray(metric.feesPaid);
 
   metric.save();
   return metric;

@@ -303,6 +303,11 @@ export class SSOVPutDepositsState extends Entity {
     this.set("summedUserDeposits", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("summedOwnership", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("userPremiums", Value.fromBigDecimalArray(new Array(0)));
+    this.set("summedUserPremiums", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("totalPremiums", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("crvRewards", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("crvRewardsInUSD", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("crvRewardsInUnderlying", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("assetPrice", Value.fromBigDecimal(BigDecimal.zero()));
     this.set(
       "positionsValueInUnderlying",
@@ -436,6 +441,51 @@ export class SSOVPutDepositsState extends Entity {
 
   set userPremiums(value: Array<BigDecimal>) {
     this.set("userPremiums", Value.fromBigDecimalArray(value));
+  }
+
+  get summedUserPremiums(): BigDecimal {
+    let value = this.get("summedUserPremiums");
+    return value!.toBigDecimal();
+  }
+
+  set summedUserPremiums(value: BigDecimal) {
+    this.set("summedUserPremiums", Value.fromBigDecimal(value));
+  }
+
+  get totalPremiums(): BigDecimal {
+    let value = this.get("totalPremiums");
+    return value!.toBigDecimal();
+  }
+
+  set totalPremiums(value: BigDecimal) {
+    this.set("totalPremiums", Value.fromBigDecimal(value));
+  }
+
+  get crvRewards(): BigDecimal {
+    let value = this.get("crvRewards");
+    return value!.toBigDecimal();
+  }
+
+  set crvRewards(value: BigDecimal) {
+    this.set("crvRewards", Value.fromBigDecimal(value));
+  }
+
+  get crvRewardsInUSD(): BigDecimal {
+    let value = this.get("crvRewardsInUSD");
+    return value!.toBigDecimal();
+  }
+
+  set crvRewardsInUSD(value: BigDecimal) {
+    this.set("crvRewardsInUSD", Value.fromBigDecimal(value));
+  }
+
+  get crvRewardsInUnderlying(): BigDecimal {
+    let value = this.get("crvRewardsInUnderlying");
+    return value!.toBigDecimal();
+  }
+
+  set crvRewardsInUnderlying(value: BigDecimal) {
+    this.set("crvRewardsInUnderlying", Value.fromBigDecimal(value));
   }
 
   get assetPrice(): BigDecimal {
@@ -1616,6 +1666,7 @@ export class JonesVaultPnL extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("timestamp", Value.fromBigInt(BigInt.zero()));
+    this.set("dateStr", Value.fromString(""));
     this.set("epoch", Value.fromBigInt(BigInt.zero()));
     this.set("asset", Value.fromString(""));
     this.set("pnlPercentage", Value.fromBigDecimal(BigDecimal.zero()));
@@ -1670,6 +1721,15 @@ export class JonesVaultPnL extends Entity {
 
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get dateStr(): string {
+    let value = this.get("dateStr");
+    return value!.toString();
+  }
+
+  set dateStr(value: string) {
+    this.set("dateStr", Value.fromString(value));
   }
 
   get epoch(): BigInt {

@@ -25,6 +25,12 @@ export function loadOrCreateSSOVPutDepositsStateMetric(
     metric.summedUserDeposits = BigDecimal.fromString("0");
     metric.summedOwnership = BigDecimal.fromString("0");
 
+    metric.summedUserPremiums = BigDecimal.fromString("0");
+    metric.totalPremiums = BigDecimal.fromString("0");
+    metric.crvRewards = BigDecimal.fromString("0");
+    metric.crvRewardsInUSD = BigDecimal.fromString("0");
+    metric.crvRewardsInUnderlying = BigDecimal.fromString("0");
+
     metric.save();
   }
 
