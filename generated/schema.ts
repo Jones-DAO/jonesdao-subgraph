@@ -582,6 +582,72 @@ export class SSOVPurchasesState extends Entity {
   }
 }
 
+export class GMXPositionState extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
+    this.set("asset", Value.fromString(""));
+    this.set("positions", Value.fromStringArray(new Array(0)));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save GMXPositionState entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save GMXPositionState entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("GMXPositionState", id.toString(), this);
+    }
+  }
+
+  static load(id: string): GMXPositionState | null {
+    return changetype<GMXPositionState | null>(
+      store.get("GMXPositionState", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get asset(): string {
+    let value = this.get("asset");
+    return value!.toString();
+  }
+
+  set asset(value: string) {
+    this.set("asset", Value.fromString(value));
+  }
+
+  get positions(): Array<string> {
+    let value = this.get("positions");
+    return value!.toStringArray();
+  }
+
+  set positions(value: Array<string>) {
+    this.set("positions", Value.fromStringArray(value));
+  }
+}
+
 export class Heartbeat extends Entity {
   constructor(id: string) {
     super();
@@ -884,102 +950,6 @@ export class JonesVaultPnL extends Entity {
 
   set vaultState(value: string) {
     this.set("vaultState", Value.fromString(value));
-  }
-}
-
-export class JonesEpochStarted extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-
-    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
-    this.set("asset", Value.fromString(""));
-    this.set("ssovcEpoch", Value.fromBigInt(BigInt.zero()));
-    this.set("ssovpEpoch", Value.fromBigInt(BigInt.zero()));
-    this.set("amount", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("jAssetAmount", Value.fromBigDecimal(BigDecimal.zero()));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save JonesEpochStarted entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        "Cannot save JonesEpochStarted entity with non-string ID. " +
-          'Considering using .toHex() to convert the "id" to a string.'
-      );
-      store.set("JonesEpochStarted", id.toString(), this);
-    }
-  }
-
-  static load(id: string): JonesEpochStarted | null {
-    return changetype<JonesEpochStarted | null>(
-      store.get("JonesEpochStarted", id)
-    );
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get timestamp(): BigInt {
-    let value = this.get("timestamp");
-    return value!.toBigInt();
-  }
-
-  set timestamp(value: BigInt) {
-    this.set("timestamp", Value.fromBigInt(value));
-  }
-
-  get asset(): string {
-    let value = this.get("asset");
-    return value!.toString();
-  }
-
-  set asset(value: string) {
-    this.set("asset", Value.fromString(value));
-  }
-
-  get ssovcEpoch(): BigInt {
-    let value = this.get("ssovcEpoch");
-    return value!.toBigInt();
-  }
-
-  set ssovcEpoch(value: BigInt) {
-    this.set("ssovcEpoch", Value.fromBigInt(value));
-  }
-
-  get ssovpEpoch(): BigInt {
-    let value = this.get("ssovpEpoch");
-    return value!.toBigInt();
-  }
-
-  set ssovpEpoch(value: BigInt) {
-    this.set("ssovpEpoch", Value.fromBigInt(value));
-  }
-
-  get amount(): BigDecimal {
-    let value = this.get("amount");
-    return value!.toBigDecimal();
-  }
-
-  set amount(value: BigDecimal) {
-    this.set("amount", Value.fromBigDecimal(value));
-  }
-
-  get jAssetAmount(): BigDecimal {
-    let value = this.get("jAssetAmount");
-    return value!.toBigDecimal();
-  }
-
-  set jAssetAmount(value: BigDecimal) {
-    this.set("jAssetAmount", Value.fromBigDecimal(value));
   }
 }
 

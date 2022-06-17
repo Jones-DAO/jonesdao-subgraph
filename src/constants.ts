@@ -73,10 +73,14 @@ export const CRV = "0x11cdb42b0eb46d95f990bedd4695a6e3fa034978";
 export const USDC = "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8";
 export const WBTC = "0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f";
 
-// option types
+// Dopex option types
 export const CALL = "CALL";
 export const PUT = "PUT";
 
 // vault states
 export const MANAGED = "MANAGED";
 export const UNMANAGED = "UNMANAGED";
+
+// GMX position types
+export const LONG = "LONG";
+export const SHORT = "SHORT";

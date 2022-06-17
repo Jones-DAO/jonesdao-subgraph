@@ -331,3 +331,99 @@ dataSources:
         - event: SSOVPurchase(indexed uint256,uint256,uint256,uint256,uint256,address)
           handler: handlePutPurchase
       file: ./src/Purchases/assets/rdpx.ts
+  - kind: ethereum
+    name: JonesHedgingV3StrategyDPX
+    network: arbitrum-one
+    source:
+      address: "0xB9bd050747357ce1fF4eFD314012ca94C07543E6"
+      abi: JonesHedgingV3Strategy
+      startBlock: 13519691
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Random1
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: GMXVault
+          file: ./abis/GMXVault.json
+        - name: JonesHedgingV3Strategy
+          file: ./abis/JonesHedgingV3Strategy.json
+      eventHandlers:
+        - event: IncreasePosition(indexed address,indexed address,indexed address,uint256,uint256,uint256,bool,uint256)
+          handler: onIncreasePosition
+      file: ./src/GMX/assets/dpx.ts
+  - kind: ethereum
+    name: JonesHedgingV3StrategyRDPX
+    network: arbitrum-one
+    source:
+      address: "0xe98f68F3380c990D3045B4ae29f3BCa0F3D02939"
+      abi: JonesHedgingV3Strategy
+      startBlock: 13519691
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Random1
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: GMXVault
+          file: ./abis/GMXVault.json
+        - name: JonesHedgingV3Strategy
+          file: ./abis/JonesHedgingV3Strategy.json
+      eventHandlers:
+        - event: IncreasePosition(indexed address,indexed address,indexed address,uint256,uint256,uint256,bool,uint256)
+          handler: onIncreasePosition
+      file: ./src/GMX/assets/rdpx.ts
+  - kind: ethereum
+    name: JonesHedgingV3StrategyWETH
+    network: arbitrum-one
+    source:
+      address: "0xC8d6d21995E00e17c5aaF07bBCde43f0ccd12725"
+      abi: JonesHedgingV3Strategy
+      startBlock: 13519691
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Random1
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: GMXVault
+          file: ./abis/GMXVault.json
+        - name: JonesHedgingV3Strategy
+          file: ./abis/JonesHedgingV3Strategy.json
+      eventHandlers:
+        - event: IncreasePosition(indexed address,indexed address,indexed address,uint256,uint256,uint256,bool,uint256)
+          handler: onIncreasePosition
+      file: ./src/GMX/assets/weth.ts
+  - kind: ethereum
+    name: JonesHedgingV3StrategyGOHM
+    network: arbitrum-one
+    source:
+      address: "0xe36fA7dC99658C9B7E247471261b65A88077D349"
+      abi: JonesHedgingV3Strategy
+      startBlock: 13519691
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Random1
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: GMXVault
+          file: ./abis/GMXVault.json
+        - name: JonesHedgingV3Strategy
+          file: ./abis/JonesHedgingV3Strategy.json
+      eventHandlers:
+        - event: IncreasePosition(indexed address,indexed address,indexed address,uint256,uint256,uint256,bool,uint256)
+          handler: onIncreasePosition
+      file: ./src/GMX/assets/gohm.ts

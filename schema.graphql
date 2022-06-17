@@ -57,6 +57,13 @@ type SSOVPurchasesState @entity {
   pnlUnderlying: BigDecimal!
 }
 
+type GMXPositionState @entity {
+  id: ID!
+  timestamp: BigInt!
+  asset: String!
+  positions: [String!]!
+}
+
 # Just a helper to keep track of latest heartbeats
 type Heartbeat @entity {
   id: ID! # e.g. 2019-01-01T03
@@ -89,16 +96,6 @@ type JonesVaultPnL @entity {
   currentAssetsWithPnl: BigDecimal!
   assetPrice: BigDecimal!
   vaultState: String!
-}
-
-type JonesEpochStarted @entity {
-  id: ID!
-  timestamp: BigInt!
-  asset: String!
-  ssovcEpoch: BigInt!
-  ssovpEpoch: BigInt!
-  amount: BigDecimal!
-  jAssetAmount: BigDecimal!
 }
 
 type HedgingStrategyState @entity {

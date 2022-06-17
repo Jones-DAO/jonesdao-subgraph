@@ -1,13 +1,16 @@
 import { BigInt, BigDecimal, Address } from "@graphprotocol/graph-ts";
 import { HedgingStrategyState } from "../../generated/schema";
 import { loadOrCreateHedgingStrategyStateMetric } from "./metric";
+import { loadGMXPositionMetric } from "../GMX/metric";
 import {
   getBalanceOf,
   getAssetPriceInOtherAsset,
   getEarningsFromDopexFarm,
-  ZERO
+  ZERO,
+  assetToTokenAddr
 } from "../helpers";
 import { ERC20 } from "../../generated/JonesETHVaultV1/ERC20";
+import { GMXVault } from "../../generated/JonesHedgingV3StrategyDPX/GMXVault";
 import { toDecimal } from "../utils/Decimals";
 import { UniswapV2Pair } from "../../generated/JonesETHVaultV1/UniswapV2Pair";
 import {
@@ -15,7 +18,9 @@ import {
   RDPXWETH_SUSHI_PAIR,
   DPX_FARM,
   DPXWETH_FARM,
-  RDPXWETH_FARM
+  RDPXWETH_FARM,
+  LONG,
+  GMX_VAULT
 } from "../constants";
 
 export function updateAndGetHedgingStrategyState(
@@ -88,6 +93,8 @@ export function updateAndGetHedgingStrategyState(
     totalDpxFarmAmount = dpxFarmingAmount.plus(dpxRewardAmount);
   }
 
+  const GMXPositionsValue = getGMXPositionsValue(hedgingStrategyAddress, asset);
+
   metric.totalUnderlyingValue = tokenHoldingsValueInAsset
     .plus(lpValueInAsset)
     .plus(totalDpxFarmAmount);
@@ -132,4 +139,68 @@ const getLpValueInAsset = (
   }
 
   return ZERO;
+};
+
+export const getGMXPositionsValue = (hedgingStrategyAddress: string, asset: string): BigDecimal => {
+  let gmxPositionMetric = loadGMXPositionMetric(asset);
+
+  const gmxVault = GMXVault.bind(Address.fromString(GMX_VAULT));
+
+  if (!gmxPositionMetric) return ZERO;
+
+  const positionStrings = gmxPositionMetric.positions;
+
+  let positionsValueInUsd = ZERO;
+
+  let stillExistingPositions = [];
+
+  for (let i = 0; i < gmxPositionMetric.positions.length; i++) {
+    const positionData = positionStrings[i].split("-");
+
+    const collateralToken = Address.fromString(assetToTokenAddr(positionData[0]));
+    const indexToken = Address.fromString(assetToTokenAddr(positionData[1]));
+    const isLong = positionData[2] === LONG;
+
+    const maybePosition = gmxVault.try_getPosition(
+      Address.fromString(hedgingStrategyAddress),
+      collateralToken,
+      indexToken,
+      isLong
+    );
+
+    if (!maybePosition.reverted) {
+      stillExistingPositions.push(positionStrings[i]);
+
+      const position = maybePosition.value;
+      const size = position.value0;
+      const collateral = position.value1;
+      const entryFundingRate = position.value3;
+
+      const deltaResult = gmxVault.getPositionDelta(
+        Address.fromString(hedgingStrategyAddress),
+        collateralToken,
+        indexToken,
+        isLong
+      );
+      const delta = deltaResult.value1;
+
+      const positionFee = gmxVault.getPositionFee(size);
+      const fundingFee = gmxVault.getFundingFee(collateralToken, size, entryFundingRate);
+
+      const positionPnlInUsd = toDecimal(
+        delta
+          .plus(collateral)
+          .minus(positionFee)
+          .minus(fundingFee),
+        18
+      );
+
+      positionsValueInUsd = positionsValueInUsd.plus(positionPnlInUsd);
+    }
+  }
+
+  gmxPositionMetric.positions = stillExistingPositions;
+  gmxPositionMetric.save();
+
+  return positionsValueInUsd.times(getAssetPriceInOtherAsset("USDC", asset));
 };
