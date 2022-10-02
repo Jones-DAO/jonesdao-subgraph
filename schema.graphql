@@ -7,20 +7,11 @@ type JAssetMetric @entity {
   AssetPrice: BigDecimal!
 }
 
-# ------ PUTS --------
-type JonesSSOVPutDeposit @entity {
+type JonesSSOVPurchase @entity {
   id: ID!
   timestamp: BigInt!
   asset: String!
-  epoch: BigInt!
-  strikeIndex: BigInt!
-  amount: BigDecimal!
-}
-
-type JonesSSOVPutPurchase @entity {
-  id: ID!
-  timestamp: BigInt!
-  asset: String!
+  optionType: String!
   epoch: BigInt!
   strikeIndex: BigInt!
   amount: BigDecimal!
@@ -28,134 +19,49 @@ type JonesSSOVPutPurchase @entity {
   totalFee: BigDecimal!
 }
 
-type SSOVPutDepositsState @entity {
-  id: ID!
-  timestamp: BigInt!
-  epoch: BigInt!
-  asset: String!
-  strikes: [BigDecimal!]!
-  ownership: [BigDecimal!]!
-  totalDeposits: [BigDecimal!]!
-  userDeposits: [BigDecimal!]!
-  summedTotalDeposits: BigDecimal!
-  summedUserDeposits: BigDecimal!
-  summedOwnership: BigDecimal!
-  userPremiums: [BigDecimal!]!
-  summedUserPremiums: BigDecimal!
-  totalPremiums: BigDecimal!
-  crvRewards: BigDecimal!
-  crvRewardsInUSD: BigDecimal!
-  crvRewardsInUnderlying: BigDecimal!
-  assetPrice: BigDecimal!
-  positionsValueInUnderlying: BigDecimal!
-  user: String!
-}
-
-type SSOVPutPurchasesState @entity {
-  id: ID!
-  timestamp: BigInt!
-  epoch: BigInt!
-  asset: String!
-  strikes: [BigDecimal!]!
-  putsPurchased: [BigDecimal!]!
-  premiumsPaid: [BigDecimal!]!
-  feesPaid: [BigDecimal!]!
-  costToExercise: [BigDecimal!]!
-  assetPrice: BigDecimal!
-  totalPremiumsPaid: BigDecimal!
-  totalFeesPaid: BigDecimal!
-  positionsValueInUnderlying: BigDecimal!
-  user: String!
-}
-
-type SummedJonesSSOVPutPurchase @entity {
+type SummedJonesSSOVPurchase @entity {
   id: ID!
   asset: String!
+  optionType: String!
   epoch: BigInt!
   strikes: [BigInt!]!
-  putsPurchased: [BigDecimal!]!
+  optionsPurchased: [BigDecimal!]!
   premiumsPaid: [BigDecimal!]!
   feesPaid: [BigDecimal!]!
   costToExercise: [BigDecimal!]!
   totalPremiumsPaid: BigDecimal!
   totalFeesPaid: BigDecimal!
-  totalCostToExercise: BigDecimal!
 }
 
-# ------------- Calls ------------
-type JonesSSOVCallPurchase @entity {
+type SSOVDepositsState @entity {
   id: ID!
   timestamp: BigInt!
   asset: String!
+  optionType: String!
   epoch: BigInt!
-  strikeIndex: BigInt!
-  amount: BigDecimal!
-  premium: BigDecimal!
-  totalFee: BigDecimal!
+  strategy: String!
+  assetPrice: BigDecimal!
+  pnlUnderlying: BigDecimal!
+  pnlPercentage: BigDecimal!
+  totalDepositedValue: BigDecimal!
 }
 
-type SummedJonesSSOVCallPurchase @entity {
-  id: ID!
-  asset: String!
-  epoch: BigInt!
-  strikes: [BigInt!]!
-  callsPurchased: [BigDecimal!]!
-  premiumsPaid: [BigDecimal!]!
-  feesPaid: [BigDecimal!]!
-  costToExercise: [BigDecimal!]!
-  totalPremiumsPaid: BigDecimal!
-  totalFeesPaid: BigDecimal!
-  totalCostToExercise: BigDecimal!
-}
-
-type JonesSSOVCallDeposit @entity {
+type SSOVPurchasesState @entity {
   id: ID!
   timestamp: BigInt!
   asset: String!
+  optionType: String!
   epoch: BigInt!
-  strikeIndex: BigInt!
-  amount: BigDecimal!
-}
-
-type SSOVCallDepositsState @entity {
-  id: ID!
-  timestamp: BigInt!
-  epoch: BigInt!
-  asset: String!
-  strikes: [BigDecimal!]!
-  ownership: [BigDecimal!]!
-  totalDeposits: [BigDecimal!]!
-  userDeposits: [BigDecimal!]!
-  summedTotalDeposits: BigDecimal!
-  summedUserDeposits: BigDecimal!
-  summedOwnership: BigDecimal!
+  strategy: String!
   pnlPercentage: BigDecimal!
   pnlUnderlying: BigDecimal!
-  totalFarmRewards: BigDecimal!
-  userFarmRewards: BigDecimal!
-  totalPremiums: [BigDecimal!]!
-  userPremiums: [BigDecimal!]!
-  summedUserDepositRewards: BigDecimal!
-  assetPrice: BigDecimal!
-  user: String!
 }
 
-type SSOVCallPurchasesState @entity {
+type GMXPositionState @entity {
   id: ID!
   timestamp: BigInt!
-  epoch: BigInt!
   asset: String!
-  strikes: [BigDecimal!]!
-  callsPurchased: [BigDecimal!]!
-  premiumsPaid: [BigDecimal!]!
-  feesPaid: [BigDecimal!]!
-  costToExercise: [BigDecimal!]!
-  assetPrice: BigDecimal!
-  totalPremiumsPaid: BigDecimal!
-  totalFeesPaid: BigDecimal!
-  pnlPercentage: BigDecimal!
-  pnlUnderlying: BigDecimal!
-  user: String!
+  positions: [String!]!
 }
 
 # Just a helper to keep track of latest heartbeats
@@ -181,22 +87,21 @@ type JonesVaultPnL @entity {
   totalSSOVCAssetsDeposited: BigDecimal!
   SSOVCDepositPnl: BigDecimal!
   SSOVCPurchasePnl: BigDecimal!
-  SSOVPDepositsValue: BigDecimal!
-  SSOVPPurchasesValue: BigDecimal!
+  SSOVPDepositPnl: BigDecimal!
+  SSOVPPurchasePnl: BigDecimal!
   totalAssetsFarming: BigDecimal!
   farmPnl: BigDecimal!
   epochStartingAssets: BigDecimal!
-  unallocatedAssets: BigDecimal!
+  unallocatedAssetValue: BigDecimal!
   currentAssetsWithPnl: BigDecimal!
   assetPrice: BigDecimal!
+  vaultState: String!
 }
 
-type JonesEpochStarted @entity {
+type HedgingStrategyState @entity {
   id: ID!
   timestamp: BigInt!
+  dateStr: String!
   asset: String!
-  ssovcEpoch: BigInt!
-  ssovpEpoch: BigInt!
-  amount: BigDecimal!
-  jAssetAmount: BigDecimal!
+  totalUnderlyingValue: BigDecimal!
 }

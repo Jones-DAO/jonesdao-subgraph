@@ -11,7 +11,7 @@ dataSources:
       # DPXUSD: this is for prod (happens rather often)
       address: "0x0c1cf6883efa1b496b01f654e247b9b419873054"
       abi: UniswapV2Pair
-      startBlock: 8835831
+      startBlock: 11200000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -23,29 +23,33 @@ dataSources:
           file: ./abis/ERC20.json
         - name: UniswapV2Pair
           file: ./abis/UniswapV2Pair.json
-        - name: ArbEthSSOVV2
-          file: ./abis/ArbEthSSOVV2.json
-        - name: Curve2PoolSsovPut
-          file: ./abis/Curve2PoolSsovPut.json
-        - name: DpxCustomPriceOracle
-          file: ./abis/DpxCustomPriceOracle.json
+        - name: JonesDPXVaultV3
+          file: ./abis/JonesDPXVaultV3.json
+        - name: JonesERC20VaultV3
+          file: ./abis/JonesERC20VaultV3.json
+        - name: JonesSSOVCallV3Strategy
+          file: ./abis/JonesSSOVCallV3Strategy.json
+        - name: JonesSSOVPutV3Strategy
+          file: ./abis/JonesSSOVPutV3Strategy.json
+        - name: SsovV3
+          file: ./abis/SsovV3.json
+        - name: SsovV3Viewer
+          file: ./abis/SsovV3Viewer.json
+        - name: SsovV3OptionsToken
+          file: ./abis/SsovV3OptionsToken.json
         - name: StakingRewards
           file: ./abis/StakingRewards.json
-        - name: JonesArbETHVaultV2
-          file: ./abis/JonesArbETHVaultV2.json
-        - name: CurveGauge
-          file: ./abis/CurveGauge.json
       eventHandlers:
         - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
           handler: handleSwap
       file: ./src/Heartbeat/HeartbeatHandler.ts
   - kind: ethereum
-    name: JonesETHVaultV2
+    name: JonesSSOVCallV3StrategyWETH
     network: arbitrum-one
     source:
-      address: "0xD126F379D998B8C32CcDc55c49260685867535F8"
-      abi: JonesArbETHVaultV2
-      startBlock: 8835831
+      address: "0x5faa93e9F0eA7e99D6b713AF23854e39504bf437"
+      abi: JonesSSOVCallV3Strategy
+      startBlock: 11200000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -57,109 +61,369 @@ dataSources:
           file: ./abis/ERC20.json
         - name: UniswapV2Pair
           file: ./abis/UniswapV2Pair.json
-        - name: ArbEthSSOVV2
-          file: ./abis/ArbEthSSOVV2.json
-        - name: Curve2PoolSsovPut
-          file: ./abis/Curve2PoolSsovPut.json
-        - name: DpxCustomPriceOracle
-          file: ./abis/DpxCustomPriceOracle.json
-        - name: JonesArbETHVaultV2
-          file: ./abis/JonesArbETHVaultV2.json
-        - name: CurveGauge
-          file: ./abis/CurveGauge.json
+        - name: JonesDPXVaultV3
+          file: ./abis/JonesDPXVaultV3.json
+        - name: JonesERC20VaultV3
+          file: ./abis/JonesERC20VaultV3.json
+        - name: JonesSSOVCallV3Strategy
+          file: ./abis/JonesSSOVCallV3Strategy.json
+        - name: JonesSSOVPutV3Strategy
+          file: ./abis/JonesSSOVPutV3Strategy.json
+        - name: SsovV3
+          file: ./abis/SsovV3.json
+        - name: SsovV3Viewer
+          file: ./abis/SsovV3Viewer.json
+        - name: SsovV3OptionsToken
+          file: ./abis/SsovV3OptionsToken.json
       eventHandlers:
-        - event: SSOVDeposit(indexed uint256,uint256,uint256)
-          handler: handleJonesVaultETHCallDeposit
-        - event: SSOVCallPurchase(indexed uint256,uint256,uint256,uint256,uint256)
-          handler: handleJonesVaultETHCallPurchase
-        - event: SSOVPDeposit(indexed uint256,uint256,uint256)
-          handler: handleJonesVaultETHPutDeposit
-        - event: SSOVPutPurchase(indexed uint256,uint256,uint256,uint256,uint256)
-          handler: handleJonesVaultETHPutPurchase
-        - event: EpochStarted(indexed uint256,uint256,uint256)
-          handler: handleJonesVaultETHEpochStarted
-      file: ./src/JonesVaults/ETHVaultV2/ETHVaultV2Handler.ts
+        - event: SSOVPurchase(indexed uint256,uint256,uint256,uint256,uint256,address)
+          handler: handleCallPurchase
+      file: ./src/Purchases/assets/weth.ts
   - kind: ethereum
-    name: JonesDPXVaultV2
+    name: JonesSSOVCallV3StrategyDPX
     network: arbitrum-one
     source:
-      address: "0x211C70f7783fb4018C92BECeCD92179AecF7c221"
-      abi: JonesTokenVaultV2
-      startBlock: 8835831
+      address: "0xCB75dd494b0205aC57e19B14d1ab5AE599637D86"
+      abi: JonesSSOVCallV3Strategy
+      startBlock: 11200000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - Random2
+        - Random1
       abis:
         - name: ERC20
           file: ./abis/ERC20.json
         - name: UniswapV2Pair
           file: ./abis/UniswapV2Pair.json
-        - name: ArbEthSSOVV2
-          file: ./abis/ArbEthSSOVV2.json
-        - name: Curve2PoolSsovPut
-          file: ./abis/Curve2PoolSsovPut.json
-        - name: DpxSSOVV2
-          file: ./abis/DpxSSOVV2.json
-        - name: DpxCustomPriceOracle
-          file: ./abis/DpxCustomPriceOracle.json
-        - name: JonesTokenVaultV2
-          file: ./abis/JonesTokenVaultV2.json
-        - name: CurveGauge
-          file: ./abis/CurveGauge.json
+        - name: JonesDPXVaultV3
+          file: ./abis/JonesDPXVaultV3.json
+        - name: JonesERC20VaultV3
+          file: ./abis/JonesERC20VaultV3.json
+        - name: JonesSSOVCallV3Strategy
+          file: ./abis/JonesSSOVCallV3Strategy.json
+        - name: JonesSSOVPutV3Strategy
+          file: ./abis/JonesSSOVPutV3Strategy.json
+        - name: SsovV3
+          file: ./abis/SsovV3.json
+        - name: SsovV3Viewer
+          file: ./abis/SsovV3Viewer.json
+        - name: SsovV3OptionsToken
+          file: ./abis/SsovV3OptionsToken.json
       eventHandlers:
-        - event: SSOVDeposit(indexed uint256,uint256,uint256,address)
-          handler: handleJonesVaultDPXCallDeposit
-        - event: SSOVCallPurchase(indexed uint256,uint256,uint256,uint256,uint256,address)
-          handler: handleJonesVaultDPXCallPurchase
-        - event: SSOVPDeposit(indexed uint256,uint256,uint256)
-          handler: handleJonesVaultDPXPutDeposit
-        - event: SSOVPutPurchase(indexed uint256,uint256,uint256,uint256,uint256,address)
-          handler: handleJonesVaultDPXPutPurchase
-        - event: EpochStarted(indexed uint256,uint256,uint256)
-          handler: handleJonesVaultDPXEpochStarted
-      file: ./src/JonesVaults/DPXVaultV2/DPXVaultV2Handler.ts
+        - event: SSOVPurchase(indexed uint256,uint256,uint256,uint256,uint256,address)
+          handler: handleCallPurchase
+      file: ./src/Purchases/assets/dpx.ts
   - kind: ethereum
-    name: JonesGOHMVaultV2
+    name: JonesSSOVCallV3StrategyGOHM
     network: arbitrum-one
     source:
-      address: "0xa0f154bB6D0e09ad04a85A1C6ca347D56e4D76ba"
-      abi: JonesTokenVaultV2
-      startBlock: 8835831
+      address: "0xcB94234e4B2FE204fb872FD38beCDB064991044c"
+      abi: JonesSSOVCallV3Strategy
+      startBlock: 11200000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - Random3
+        - Random1
       abis:
         - name: ERC20
           file: ./abis/ERC20.json
         - name: UniswapV2Pair
           file: ./abis/UniswapV2Pair.json
-        - name: ArbEthSSOVV2
-          file: ./abis/ArbEthSSOVV2.json
-        - name: Curve2PoolSsovPut
-          file: ./abis/Curve2PoolSsovPut.json
-        - name: GohmSSOVV2
-          file: ./abis/GohmSSOVV2.json
-        - name: DpxCustomPriceOracle
-          file: ./abis/DpxCustomPriceOracle.json
-        - name: JonesTokenVaultV2
-          file: ./abis/JonesTokenVaultV2.json
-        - name: CurveGauge
-          file: ./abis/CurveGauge.json
+        - name: JonesDPXVaultV3
+          file: ./abis/JonesDPXVaultV3.json
+        - name: JonesERC20VaultV3
+          file: ./abis/JonesERC20VaultV3.json
+        - name: JonesSSOVCallV3Strategy
+          file: ./abis/JonesSSOVCallV3Strategy.json
+        - name: JonesSSOVPutV3Strategy
+          file: ./abis/JonesSSOVPutV3Strategy.json
+        - name: SsovV3
+          file: ./abis/SsovV3.json
+        - name: SsovV3Viewer
+          file: ./abis/SsovV3Viewer.json
+        - name: SsovV3OptionsToken
+          file: ./abis/SsovV3OptionsToken.json
       eventHandlers:
-        - event: SSOVDeposit(indexed uint256,uint256,uint256,address)
-          handler: handleJonesVaultGOHMCallDeposit
-        - event: SSOVCallPurchase(indexed uint256,uint256,uint256,uint256,uint256,address)
-          handler: handleJonesVaultGOHMCallPurchase
-        - event: SSOVPDeposit(indexed uint256,uint256,uint256)
-          handler: handleJonesVaultGOHMPutDeposit
-        - event: SSOVPutPurchase(indexed uint256,uint256,uint256,uint256,uint256,address)
-          handler: handleJonesVaultGOHMPutPurchase
-        - event: EpochStarted(indexed uint256,uint256,uint256)
-          handler: handleJonesVaultGOHMEpochStarted
-      file: ./src/JonesVaults/GOHMVaultV2/GOHMVaultV2Handler.ts
+        - event: SSOVPurchase(indexed uint256,uint256,uint256,uint256,uint256,address)
+          handler: handleCallPurchase
+      file: ./src/Purchases/assets/gohm.ts
+  - kind: ethereum
+    name: JonesSSOVCallV3StrategyRDPX
+    network: arbitrum-one
+    source:
+      address: "0xC298d695b6507F7C42a8a9DE819276833e5A1637"
+      abi: JonesSSOVCallV3Strategy
+      startBlock: 11200000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Random1
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Pair
+          file: ./abis/UniswapV2Pair.json
+        - name: JonesDPXVaultV3
+          file: ./abis/JonesDPXVaultV3.json
+        - name: JonesERC20VaultV3
+          file: ./abis/JonesERC20VaultV3.json
+        - name: JonesSSOVCallV3Strategy
+          file: ./abis/JonesSSOVCallV3Strategy.json
+        - name: JonesSSOVPutV3Strategy
+          file: ./abis/JonesSSOVPutV3Strategy.json
+        - name: SsovV3
+          file: ./abis/SsovV3.json
+        - name: SsovV3Viewer
+          file: ./abis/SsovV3Viewer.json
+        - name: SsovV3OptionsToken
+          file: ./abis/SsovV3OptionsToken.json
+      eventHandlers:
+        - event: SSOVPurchase(indexed uint256,uint256,uint256,uint256,uint256,address)
+          handler: handleCallPurchase
+      file: ./src/Purchases/assets/rdpx.ts
+  - kind: ethereum
+    name: JonesSSOVPutV3StrategyWETH
+    network: arbitrum-one
+    source:
+      address: "0x5faa93e9F0eA7e99D6b713AF23854e39504bf437"
+      abi: JonesSSOVPutV3Strategy
+      startBlock: 11200000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Random1
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Pair
+          file: ./abis/UniswapV2Pair.json
+        - name: JonesDPXVaultV3
+          file: ./abis/JonesDPXVaultV3.json
+        - name: JonesERC20VaultV3
+          file: ./abis/JonesERC20VaultV3.json
+        - name: JonesSSOVCallV3Strategy
+          file: ./abis/JonesSSOVCallV3Strategy.json
+        - name: JonesSSOVPutV3Strategy
+          file: ./abis/JonesSSOVPutV3Strategy.json
+        - name: SsovV3
+          file: ./abis/SsovV3.json
+        - name: SsovV3Viewer
+          file: ./abis/SsovV3Viewer.json
+        - name: SsovV3OptionsToken
+          file: ./abis/SsovV3OptionsToken.json
+      eventHandlers:
+        - event: SSOVPurchase(indexed uint256,uint256,uint256,uint256,uint256,address)
+          handler: handlePutPurchase
+      file: ./src/Purchases/assets/weth.ts
+  - kind: ethereum
+    name: JonesSSOVPutV3StrategyDPX
+    network: arbitrum-one
+    source:
+      address: "0xCB75dd494b0205aC57e19B14d1ab5AE599637D86"
+      abi: JonesSSOVPutV3Strategy
+      startBlock: 11200000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Random1
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Pair
+          file: ./abis/UniswapV2Pair.json
+        - name: JonesDPXVaultV3
+          file: ./abis/JonesDPXVaultV3.json
+        - name: JonesERC20VaultV3
+          file: ./abis/JonesERC20VaultV3.json
+        - name: JonesSSOVCallV3Strategy
+          file: ./abis/JonesSSOVCallV3Strategy.json
+        - name: JonesSSOVPutV3Strategy
+          file: ./abis/JonesSSOVPutV3Strategy.json
+        - name: SsovV3
+          file: ./abis/SsovV3.json
+        - name: SsovV3Viewer
+          file: ./abis/SsovV3Viewer.json
+        - name: SsovV3OptionsToken
+          file: ./abis/SsovV3OptionsToken.json
+      eventHandlers:
+        - event: SSOVPurchase(indexed uint256,uint256,uint256,uint256,uint256,address)
+          handler: handlePutPurchase
+      file: ./src/Purchases/assets/dpx.ts
+  - kind: ethereum
+    name: JonesSSOVPutV3StrategyGOHM
+    network: arbitrum-one
+    source:
+      address: "0xcB94234e4B2FE204fb872FD38beCDB064991044c"
+      abi: JonesSSOVPutV3Strategy
+      startBlock: 11200000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Random1
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Pair
+          file: ./abis/UniswapV2Pair.json
+        - name: JonesDPXVaultV3
+          file: ./abis/JonesDPXVaultV3.json
+        - name: JonesERC20VaultV3
+          file: ./abis/JonesERC20VaultV3.json
+        - name: JonesSSOVCallV3Strategy
+          file: ./abis/JonesSSOVCallV3Strategy.json
+        - name: JonesSSOVPutV3Strategy
+          file: ./abis/JonesSSOVPutV3Strategy.json
+        - name: SsovV3
+          file: ./abis/SsovV3.json
+        - name: SsovV3Viewer
+          file: ./abis/SsovV3Viewer.json
+        - name: SsovV3OptionsToken
+          file: ./abis/SsovV3OptionsToken.json
+      eventHandlers:
+        - event: SSOVPurchase(indexed uint256,uint256,uint256,uint256,uint256,address)
+          handler: handlePutPurchase
+      file: ./src/Purchases/assets/gohm.ts
+  - kind: ethereum
+    name: JonesSSOVPutV3StrategyRDPX
+    network: arbitrum-one
+    source:
+      address: "0xC298d695b6507F7C42a8a9DE819276833e5A1637"
+      abi: JonesSSOVPutV3Strategy
+      startBlock: 11200000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Random1
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Pair
+          file: ./abis/UniswapV2Pair.json
+        - name: JonesDPXVaultV3
+          file: ./abis/JonesDPXVaultV3.json
+        - name: JonesERC20VaultV3
+          file: ./abis/JonesERC20VaultV3.json
+        - name: JonesSSOVCallV3Strategy
+          file: ./abis/JonesSSOVCallV3Strategy.json
+        - name: JonesSSOVPutV3Strategy
+          file: ./abis/JonesSSOVPutV3Strategy.json
+        - name: SsovV3
+          file: ./abis/SsovV3.json
+        - name: SsovV3Viewer
+          file: ./abis/SsovV3Viewer.json
+        - name: SsovV3OptionsToken
+          file: ./abis/SsovV3OptionsToken.json
+      eventHandlers:
+        - event: SSOVPurchase(indexed uint256,uint256,uint256,uint256,uint256,address)
+          handler: handlePutPurchase
+      file: ./src/Purchases/assets/rdpx.ts
+  - kind: ethereum
+    name: JonesHedgingV3StrategyDPX
+    network: arbitrum-one
+    source:
+      address: "0xB9bd050747357ce1fF4eFD314012ca94C07543E6"
+      abi: JonesHedgingV3Strategy
+      startBlock: 13519691
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Random1
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: GMXVault
+          file: ./abis/GMXVault.json
+        - name: JonesHedgingV3Strategy
+          file: ./abis/JonesHedgingV3Strategy.json
+      eventHandlers:
+        - event: IncreasePosition(indexed address,indexed address,indexed address,uint256,uint256,uint256,bool,uint256)
+          handler: onIncreasePosition
+      file: ./src/GMX/assets/dpx.ts
+  - kind: ethereum
+    name: JonesHedgingV3StrategyRDPX
+    network: arbitrum-one
+    source:
+      address: "0xe98f68F3380c990D3045B4ae29f3BCa0F3D02939"
+      abi: JonesHedgingV3Strategy
+      startBlock: 13519691
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Random1
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: GMXVault
+          file: ./abis/GMXVault.json
+        - name: JonesHedgingV3Strategy
+          file: ./abis/JonesHedgingV3Strategy.json
+      eventHandlers:
+        - event: IncreasePosition(indexed address,indexed address,indexed address,uint256,uint256,uint256,bool,uint256)
+          handler: onIncreasePosition
+      file: ./src/GMX/assets/rdpx.ts
+  - kind: ethereum
+    name: JonesHedgingV3StrategyWETH
+    network: arbitrum-one
+    source:
+      address: "0xC8d6d21995E00e17c5aaF07bBCde43f0ccd12725"
+      abi: JonesHedgingV3Strategy
+      startBlock: 13519691
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Random1
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: GMXVault
+          file: ./abis/GMXVault.json
+        - name: JonesHedgingV3Strategy
+          file: ./abis/JonesHedgingV3Strategy.json
+      eventHandlers:
+        - event: IncreasePosition(indexed address,indexed address,indexed address,uint256,uint256,uint256,bool,uint256)
+          handler: onIncreasePosition
+      file: ./src/GMX/assets/weth.ts
+  - kind: ethereum
+    name: JonesHedgingV3StrategyGOHM
+    network: arbitrum-one
+    source:
+      address: "0xe36fA7dC99658C9B7E247471261b65A88077D349"
+      abi: JonesHedgingV3Strategy
+      startBlock: 13519691
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Random1
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: GMXVault
+          file: ./abis/GMXVault.json
+        - name: JonesHedgingV3Strategy
+          file: ./abis/JonesHedgingV3Strategy.json
+      eventHandlers:
+        - event: IncreasePosition(indexed address,indexed address,indexed address,uint256,uint256,uint256,bool,uint256)
+          handler: onIncreasePosition
+      file: ./src/GMX/assets/gohm.ts
