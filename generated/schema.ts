@@ -1423,17 +1423,21 @@ export class RedeemGlp extends Entity {
     }
   }
 
-  get _ethAmount(): BigInt {
+  get _ethAmount(): BigInt | null {
     let value = this.get("_ethAmount");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toBigInt();
     }
   }
 
-  set _ethAmount(value: BigInt) {
-    this.set("_ethAmount", Value.fromBigInt(value));
+  set _ethAmount(value: BigInt | null) {
+    if (!value) {
+      this.unset("_ethAmount");
+    } else {
+      this.set("_ethAmount", Value.fromBigInt(<BigInt>value));
+    }
   }
 
   get _compound(): boolean {

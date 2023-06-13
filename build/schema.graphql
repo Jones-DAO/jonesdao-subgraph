@@ -111,7 +111,7 @@ type RedeemGlp @entity(immutable: true) {
   _retentions: BigInt! # uint256
   _ethRetentions: BigInt! # uint256
   _token: Bytes # address
-  _ethAmount: BigInt! # uint256
+  _ethAmount: BigInt # uint256
   _compound: Boolean! # bool
   blockTimestamp: BigInt!
   blockNumber: BigInt!
