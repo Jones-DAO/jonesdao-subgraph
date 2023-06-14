@@ -11,7 +11,7 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class BorrowStables extends Entity {
+export class BorrowStable extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -19,25 +19,25 @@ export class BorrowStables extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save BorrowStables entity without an ID");
+    assert(id != null, "Cannot save BorrowStable entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type BorrowStables must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type BorrowStable must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("BorrowStables", id.toBytes().toHexString(), this);
+      store.set("BorrowStable", id.toBytes().toHexString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): BorrowStables | null {
-    return changetype<BorrowStables | null>(
-      store.get_in_block("BorrowStables", id.toHexString())
+  static loadInBlock(id: Bytes): BorrowStable | null {
+    return changetype<BorrowStable | null>(
+      store.get_in_block("BorrowStable", id.toHexString())
     );
   }
 
-  static load(id: Bytes): BorrowStables | null {
-    return changetype<BorrowStables | null>(
-      store.get("BorrowStables", id.toHexString())
+  static load(id: Bytes): BorrowStable | null {
+    return changetype<BorrowStable | null>(
+      store.get("BorrowStable", id.toHexString())
     );
   }
 
@@ -107,7 +107,7 @@ export class BorrowStables extends Entity {
   }
 }
 
-export class ClaimRewards extends Entity {
+export class ClaimReward extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -115,25 +115,25 @@ export class ClaimRewards extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save ClaimRewards entity without an ID");
+    assert(id != null, "Cannot save ClaimReward entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type ClaimRewards must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type ClaimReward must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("ClaimRewards", id.toBytes().toHexString(), this);
+      store.set("ClaimReward", id.toBytes().toHexString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): ClaimRewards | null {
-    return changetype<ClaimRewards | null>(
-      store.get_in_block("ClaimRewards", id.toHexString())
+  static loadInBlock(id: Bytes): ClaimReward | null {
+    return changetype<ClaimReward | null>(
+      store.get_in_block("ClaimReward", id.toHexString())
     );
   }
 
-  static load(id: Bytes): ClaimRewards | null {
-    return changetype<ClaimRewards | null>(
-      store.get("ClaimRewards", id.toHexString())
+  static load(id: Bytes): ClaimReward | null {
+    return changetype<ClaimReward | null>(
+      store.get("ClaimReward", id.toHexString())
     );
   }
 
@@ -351,7 +351,7 @@ export class CompoundGlp extends Entity {
   }
 }
 
-export class CompoundStables extends Entity {
+export class CompoundStable extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -359,25 +359,25 @@ export class CompoundStables extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save CompoundStables entity without an ID");
+    assert(id != null, "Cannot save CompoundStable entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type CompoundStables must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type CompoundStable must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("CompoundStables", id.toBytes().toHexString(), this);
+      store.set("CompoundStable", id.toBytes().toHexString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): CompoundStables | null {
-    return changetype<CompoundStables | null>(
-      store.get_in_block("CompoundStables", id.toHexString())
+  static loadInBlock(id: Bytes): CompoundStable | null {
+    return changetype<CompoundStable | null>(
+      store.get_in_block("CompoundStable", id.toHexString())
     );
   }
 
-  static load(id: Bytes): CompoundStables | null {
-    return changetype<CompoundStables | null>(
-      store.get("CompoundStables", id.toHexString())
+  static load(id: Bytes): CompoundStable | null {
+    return changetype<CompoundStable | null>(
+      store.get("CompoundStable", id.toHexString())
     );
   }
 
@@ -672,7 +672,7 @@ export class DepositGlp extends Entity {
   }
 }
 
-export class DepositStables extends Entity {
+export class DepositStable extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -680,25 +680,25 @@ export class DepositStables extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save DepositStables entity without an ID");
+    assert(id != null, "Cannot save DepositStable entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type DepositStables must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type DepositStable must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("DepositStables", id.toBytes().toHexString(), this);
+      store.set("DepositStable", id.toBytes().toHexString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): DepositStables | null {
-    return changetype<DepositStables | null>(
-      store.get_in_block("DepositStables", id.toHexString())
+  static loadInBlock(id: Bytes): DepositStable | null {
+    return changetype<DepositStable | null>(
+      store.get_in_block("DepositStable", id.toHexString())
     );
   }
 
-  static load(id: Bytes): DepositStables | null {
-    return changetype<DepositStables | null>(
-      store.get("DepositStables", id.toHexString())
+  static load(id: Bytes): DepositStable | null {
+    return changetype<DepositStable | null>(
+      store.get("DepositStable", id.toHexString())
     );
   }
 
@@ -2409,7 +2409,7 @@ export class unCompoundGlp extends Entity {
   }
 }
 
-export class unCompoundStables extends Entity {
+export class unCompoundStable extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -2417,25 +2417,25 @@ export class unCompoundStables extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save unCompoundStables entity without an ID");
+    assert(id != null, "Cannot save unCompoundStable entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type unCompoundStables must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type unCompoundStable must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("unCompoundStables", id.toBytes().toHexString(), this);
+      store.set("unCompoundStable", id.toBytes().toHexString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): unCompoundStables | null {
-    return changetype<unCompoundStables | null>(
-      store.get_in_block("unCompoundStables", id.toHexString())
+  static loadInBlock(id: Bytes): unCompoundStable | null {
+    return changetype<unCompoundStable | null>(
+      store.get_in_block("unCompoundStable", id.toHexString())
     );
   }
 
-  static load(id: Bytes): unCompoundStables | null {
-    return changetype<unCompoundStables | null>(
-      store.get("unCompoundStables", id.toHexString())
+  static load(id: Bytes): unCompoundStable | null {
+    return changetype<unCompoundStable | null>(
+      store.get("unCompoundStable", id.toHexString())
     );
   }
 
@@ -2518,7 +2518,7 @@ export class unCompoundStables extends Entity {
   }
 }
 
-export class JonesGlpVaultRouterOldBorrowStables extends Entity {
+export class JonesGlpVaultRouterOldBorrowStable extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -2528,33 +2528,30 @@ export class JonesGlpVaultRouterOldBorrowStables extends Entity {
     let id = this.get("id");
     assert(
       id != null,
-      "Cannot save JonesGlpVaultRouterOldBorrowStables entity without an ID"
+      "Cannot save JonesGlpVaultRouterOldBorrowStable entity without an ID"
     );
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type JonesGlpVaultRouterOldBorrowStables must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type JonesGlpVaultRouterOldBorrowStable must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
       store.set(
-        "JonesGlpVaultRouterOldBorrowStables",
+        "JonesGlpVaultRouterOldBorrowStable",
         id.toBytes().toHexString(),
         this
       );
     }
   }
 
-  static loadInBlock(id: Bytes): JonesGlpVaultRouterOldBorrowStables | null {
-    return changetype<JonesGlpVaultRouterOldBorrowStables | null>(
-      store.get_in_block(
-        "JonesGlpVaultRouterOldBorrowStables",
-        id.toHexString()
-      )
+  static loadInBlock(id: Bytes): JonesGlpVaultRouterOldBorrowStable | null {
+    return changetype<JonesGlpVaultRouterOldBorrowStable | null>(
+      store.get_in_block("JonesGlpVaultRouterOldBorrowStable", id.toHexString())
     );
   }
 
-  static load(id: Bytes): JonesGlpVaultRouterOldBorrowStables | null {
-    return changetype<JonesGlpVaultRouterOldBorrowStables | null>(
-      store.get("JonesGlpVaultRouterOldBorrowStables", id.toHexString())
+  static load(id: Bytes): JonesGlpVaultRouterOldBorrowStable | null {
+    return changetype<JonesGlpVaultRouterOldBorrowStable | null>(
+      store.get("JonesGlpVaultRouterOldBorrowStable", id.toHexString())
     );
   }
 
@@ -2624,7 +2621,7 @@ export class JonesGlpVaultRouterOldBorrowStables extends Entity {
   }
 }
 
-export class JonesGlpVaultRouterOldClaimRewards extends Entity {
+export class JonesGlpVaultRouterOldClaimReward extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -2634,30 +2631,30 @@ export class JonesGlpVaultRouterOldClaimRewards extends Entity {
     let id = this.get("id");
     assert(
       id != null,
-      "Cannot save JonesGlpVaultRouterOldClaimRewards entity without an ID"
+      "Cannot save JonesGlpVaultRouterOldClaimReward entity without an ID"
     );
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type JonesGlpVaultRouterOldClaimRewards must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type JonesGlpVaultRouterOldClaimReward must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
       store.set(
-        "JonesGlpVaultRouterOldClaimRewards",
+        "JonesGlpVaultRouterOldClaimReward",
         id.toBytes().toHexString(),
         this
       );
     }
   }
 
-  static loadInBlock(id: Bytes): JonesGlpVaultRouterOldClaimRewards | null {
-    return changetype<JonesGlpVaultRouterOldClaimRewards | null>(
-      store.get_in_block("JonesGlpVaultRouterOldClaimRewards", id.toHexString())
+  static loadInBlock(id: Bytes): JonesGlpVaultRouterOldClaimReward | null {
+    return changetype<JonesGlpVaultRouterOldClaimReward | null>(
+      store.get_in_block("JonesGlpVaultRouterOldClaimReward", id.toHexString())
     );
   }
 
-  static load(id: Bytes): JonesGlpVaultRouterOldClaimRewards | null {
-    return changetype<JonesGlpVaultRouterOldClaimRewards | null>(
-      store.get("JonesGlpVaultRouterOldClaimRewards", id.toHexString())
+  static load(id: Bytes): JonesGlpVaultRouterOldClaimReward | null {
+    return changetype<JonesGlpVaultRouterOldClaimReward | null>(
+      store.get("JonesGlpVaultRouterOldClaimReward", id.toHexString())
     );
   }
 
@@ -3143,7 +3140,7 @@ export class JonesGlpVaultRouterOldDepositGlp extends Entity {
   }
 }
 
-export class JonesGlpVaultRouterOldDepositStables extends Entity {
+export class JonesGlpVaultRouterOldDepositStable extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -3153,33 +3150,33 @@ export class JonesGlpVaultRouterOldDepositStables extends Entity {
     let id = this.get("id");
     assert(
       id != null,
-      "Cannot save JonesGlpVaultRouterOldDepositStables entity without an ID"
+      "Cannot save JonesGlpVaultRouterOldDepositStable entity without an ID"
     );
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type JonesGlpVaultRouterOldDepositStables must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type JonesGlpVaultRouterOldDepositStable must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
       store.set(
-        "JonesGlpVaultRouterOldDepositStables",
+        "JonesGlpVaultRouterOldDepositStable",
         id.toBytes().toHexString(),
         this
       );
     }
   }
 
-  static loadInBlock(id: Bytes): JonesGlpVaultRouterOldDepositStables | null {
-    return changetype<JonesGlpVaultRouterOldDepositStables | null>(
+  static loadInBlock(id: Bytes): JonesGlpVaultRouterOldDepositStable | null {
+    return changetype<JonesGlpVaultRouterOldDepositStable | null>(
       store.get_in_block(
-        "JonesGlpVaultRouterOldDepositStables",
+        "JonesGlpVaultRouterOldDepositStable",
         id.toHexString()
       )
     );
   }
 
-  static load(id: Bytes): JonesGlpVaultRouterOldDepositStables | null {
-    return changetype<JonesGlpVaultRouterOldDepositStables | null>(
-      store.get("JonesGlpVaultRouterOldDepositStables", id.toHexString())
+  static load(id: Bytes): JonesGlpVaultRouterOldDepositStable | null {
+    return changetype<JonesGlpVaultRouterOldDepositStable | null>(
+      store.get("JonesGlpVaultRouterOldDepositStable", id.toHexString())
     );
   }
 
@@ -4941,7 +4938,7 @@ export class SetJonesLeverageStrategy extends Entity {
   }
 }
 
-export class SetJonesRewards extends Entity {
+export class SetJonesReward extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -4949,25 +4946,25 @@ export class SetJonesRewards extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save SetJonesRewards entity without an ID");
+    assert(id != null, "Cannot save SetJonesReward entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type SetJonesRewards must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type SetJonesReward must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("SetJonesRewards", id.toBytes().toHexString(), this);
+      store.set("SetJonesReward", id.toBytes().toHexString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): SetJonesRewards | null {
-    return changetype<SetJonesRewards | null>(
-      store.get_in_block("SetJonesRewards", id.toHexString())
+  static loadInBlock(id: Bytes): SetJonesReward | null {
+    return changetype<SetJonesReward | null>(
+      store.get_in_block("SetJonesReward", id.toHexString())
     );
   }
 
-  static load(id: Bytes): SetJonesRewards | null {
-    return changetype<SetJonesRewards | null>(
-      store.get("SetJonesRewards", id.toHexString())
+  static load(id: Bytes): SetJonesReward | null {
+    return changetype<SetJonesReward | null>(
+      store.get("SetJonesReward", id.toHexString())
     );
   }
 
@@ -5480,7 +5477,7 @@ export class UpdateGlpAddress extends Entity {
   }
 }
 
-export class UpdateGlpCompoundRewards extends Entity {
+export class UpdateGlpCompoundReward extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -5490,26 +5487,26 @@ export class UpdateGlpCompoundRewards extends Entity {
     let id = this.get("id");
     assert(
       id != null,
-      "Cannot save UpdateGlpCompoundRewards entity without an ID"
+      "Cannot save UpdateGlpCompoundReward entity without an ID"
     );
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type UpdateGlpCompoundRewards must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type UpdateGlpCompoundReward must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("UpdateGlpCompoundRewards", id.toBytes().toHexString(), this);
+      store.set("UpdateGlpCompoundReward", id.toBytes().toHexString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): UpdateGlpCompoundRewards | null {
-    return changetype<UpdateGlpCompoundRewards | null>(
-      store.get_in_block("UpdateGlpCompoundRewards", id.toHexString())
+  static loadInBlock(id: Bytes): UpdateGlpCompoundReward | null {
+    return changetype<UpdateGlpCompoundReward | null>(
+      store.get_in_block("UpdateGlpCompoundReward", id.toHexString())
     );
   }
 
-  static load(id: Bytes): UpdateGlpCompoundRewards | null {
-    return changetype<UpdateGlpCompoundRewards | null>(
-      store.get("UpdateGlpCompoundRewards", id.toHexString())
+  static load(id: Bytes): UpdateGlpCompoundReward | null {
+    return changetype<UpdateGlpCompoundReward | null>(
+      store.get("UpdateGlpCompoundReward", id.toHexString())
     );
   }
 
@@ -6034,7 +6031,7 @@ export class UpdateStableAddress extends Entity {
   }
 }
 
-export class UpdateStableCompoundRewards extends Entity {
+export class UpdateStableCompoundReward extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -6044,30 +6041,26 @@ export class UpdateStableCompoundRewards extends Entity {
     let id = this.get("id");
     assert(
       id != null,
-      "Cannot save UpdateStableCompoundRewards entity without an ID"
+      "Cannot save UpdateStableCompoundReward entity without an ID"
     );
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type UpdateStableCompoundRewards must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type UpdateStableCompoundReward must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set(
-        "UpdateStableCompoundRewards",
-        id.toBytes().toHexString(),
-        this
-      );
+      store.set("UpdateStableCompoundReward", id.toBytes().toHexString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): UpdateStableCompoundRewards | null {
-    return changetype<UpdateStableCompoundRewards | null>(
-      store.get_in_block("UpdateStableCompoundRewards", id.toHexString())
+  static loadInBlock(id: Bytes): UpdateStableCompoundReward | null {
+    return changetype<UpdateStableCompoundReward | null>(
+      store.get_in_block("UpdateStableCompoundReward", id.toHexString())
     );
   }
 
-  static load(id: Bytes): UpdateStableCompoundRewards | null {
-    return changetype<UpdateStableCompoundRewards | null>(
-      store.get("UpdateStableCompoundRewards", id.toHexString())
+  static load(id: Bytes): UpdateStableCompoundReward | null {
+    return changetype<UpdateStableCompoundReward | null>(
+      store.get("UpdateStableCompoundReward", id.toHexString())
     );
   }
 

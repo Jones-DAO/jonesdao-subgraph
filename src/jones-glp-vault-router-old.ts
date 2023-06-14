@@ -39,12 +39,12 @@ import {
   unCompoundStables as unCompoundStablesEvent,
 } from "../generated/JonesGlpVaultRouterOld/JonesGlpVaultRouterOld";
 import {
-  BorrowStables,
-  ClaimRewards,
+  BorrowStable,
+  ClaimReward,
   CompoundGlp,
-  CompoundStables,
+  CompoundStable,
   DepositGlp,
-  DepositStables,
+  DepositStable,
   EmergencyPaused,
   EmergencyUnpaused,
   GovernorUpdated,
@@ -58,23 +58,23 @@ import {
   RoleGranted,
   RoleRevoked,
   SetJonesLeverageStrategy,
-  SetJonesRewards,
+  SetJonesReward,
   SettleEpoch,
   Unpaused,
   UpdateAdapter,
   UpdateGlpAddress,
-  UpdateGlpCompoundRewards,
+  UpdateGlpCompoundReward,
   UpdateGlpRewardTracker,
   UpdateGlpVault,
   UpdateIncentiveReceiver,
   UpdateStableAddress,
-  UpdateStableCompoundRewards,
+  UpdateStableCompoundReward,
   UpdateStableRewardTracker,
   UpdateStableVault,
   UpdateWithdrawalRetention,
   VaultDeposit,
   unCompoundGlp,
-  unCompoundStables,
+  unCompoundStable,
 } from "../generated/schema";
 
 const zapOldHash = "0xee94bf6c";
@@ -86,7 +86,7 @@ const transferEventSignature =
 const glpVaultAddress = "0x489ee077994b6658eafa855c308275ead8097c4a";
 
 export function handleBorrowStables(event: BorrowStablesEvent): void {
-  let entity = new BorrowStables(
+  let entity = new BorrowStable(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
   entity._amountBorrowed = event.params._amountBorrowed;
@@ -99,7 +99,7 @@ export function handleBorrowStables(event: BorrowStablesEvent): void {
 }
 
 export function handleClaimRewards(event: ClaimRewardsEvent): void {
-  let entity = new ClaimRewards(
+  let entity = new ClaimReward(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
   entity._to = event.params._to;
@@ -129,7 +129,7 @@ export function handleCompoundGlp(event: CompoundGlpEvent): void {
 }
 
 export function handleCompoundStables(event: CompoundStablesEvent): void {
-  let entity = new CompoundStables(
+  let entity = new CompoundStable(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
   entity._to = event.params._to;
@@ -190,7 +190,7 @@ export function handleDepositGlp(event: DepositGlpEvent): void {
 }
 
 export function handleDepositStables(event: DepositStablesEvent): void {
-  let entity = new DepositStables(
+  let entity = new DepositStable(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
   entity._to = event.params._to;
@@ -448,7 +448,7 @@ export function handleSetJonesLeverageStrategy(
 }
 
 export function handleSetJonesRewards(event: SetJonesRewardsEvent): void {
-  let entity = new SetJonesRewards(
+  let entity = new SetJonesReward(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
   entity._previousAddress = event.params._previousAddress;
@@ -519,7 +519,7 @@ export function handleUpdateGlpAddress(event: UpdateGlpAddressEvent): void {
 export function handleUpdateGlpCompoundRewards(
   event: UpdateGlpCompoundRewardsEvent
 ): void {
-  let entity = new UpdateGlpCompoundRewards(
+  let entity = new UpdateGlpCompoundReward(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
   entity._oldGlpeCompounder = event.params._oldGlpeCompounder;
@@ -597,7 +597,7 @@ export function handleUpdateStableAddress(
 export function handleUpdateStableCompoundRewards(
   event: UpdateStableCompoundRewardsEvent
 ): void {
-  let entity = new UpdateStableCompoundRewards(
+  let entity = new UpdateStableCompoundReward(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
   entity._oldStableCompounder = event.params._oldStableCompounder;
@@ -685,7 +685,7 @@ export function handleunCompoundGlp(event: unCompoundGlpEvent): void {
 }
 
 export function handleunCompoundStables(event: unCompoundStablesEvent): void {
-  let entity = new unCompoundStables(
+  let entity = new unCompoundStable(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
   entity._to = event.params._to;

@@ -1,4 +1,4 @@
-type BorrowStables @entity(immutable: true) {
+type BorrowStable @entity(immutable: true) {
   id: Bytes!
   _amountBorrowed: BigInt! # uint256
   blockNumber: BigInt!
@@ -6,7 +6,7 @@ type BorrowStables @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type ClaimRewards @entity(immutable: true) {
+type ClaimReward @entity(immutable: true) {
   id: Bytes!
   _to: Bytes! # address
   _stableAmount: BigInt! # uint256
@@ -26,7 +26,7 @@ type CompoundGlp @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type CompoundStables @entity(immutable: true) {
+type CompoundStable @entity(immutable: true) {
   id: Bytes!
   _to: Bytes! # address
   _amount: BigInt! # uint256
@@ -51,7 +51,7 @@ type DepositGlp @entity(immutable: true) {
   zapToGlpEthAmount: BigInt
 }
 
-type DepositStables @entity(immutable: true) {
+type DepositStable @entity(immutable: true) {
   id: Bytes!
   _to: Bytes! # address
   _amount: BigInt! # uint256
@@ -192,7 +192,7 @@ type unCompoundGlp @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type unCompoundStables @entity(immutable: true) {
+type unCompoundStable @entity(immutable: true) {
   id: Bytes!
   _to: Bytes! # address
   _amount: BigInt! # uint256
@@ -200,7 +200,7 @@ type unCompoundStables @entity(immutable: true) {
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
-type JonesGlpVaultRouterOldBorrowStables @entity(immutable: true) {
+type JonesGlpVaultRouterOldBorrowStable @entity(immutable: true) {
   id: Bytes!
   _amountBorrowed: BigInt! # uint256
   blockNumber: BigInt!
@@ -208,7 +208,7 @@ type JonesGlpVaultRouterOldBorrowStables @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type JonesGlpVaultRouterOldClaimRewards @entity(immutable: true) {
+type JonesGlpVaultRouterOldClaimReward @entity(immutable: true) {
   id: Bytes!
   _to: Bytes! # address
   _stableAmount: BigInt! # uint256
@@ -248,7 +248,7 @@ type JonesGlpVaultRouterOldDepositGlp @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type JonesGlpVaultRouterOldDepositStables @entity(immutable: true) {
+type JonesGlpVaultRouterOldDepositStable @entity(immutable: true) {
   id: Bytes!
   _to: Bytes! # address
   _amount: BigInt! # uint256
@@ -388,7 +388,7 @@ type SetJonesLeverageStrategy @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type SetJonesRewards @entity(immutable: true) {
+type SetJonesReward @entity(immutable: true) {
   id: Bytes!
   _previousAddress: Bytes! # address
   _newAddress: Bytes! # address
@@ -432,7 +432,7 @@ type UpdateGlpAddress @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type UpdateGlpCompoundRewards @entity(immutable: true) {
+type UpdateGlpCompoundReward @entity(immutable: true) {
   id: Bytes!
   _oldGlpeCompounder: Bytes! # address
   _newGlpCompounder: Bytes! # address
@@ -477,7 +477,7 @@ type UpdateStableAddress @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type UpdateStableCompoundRewards @entity(immutable: true) {
+type UpdateStableCompoundReward @entity(immutable: true) {
   id: Bytes!
   _oldStableCompounder: Bytes! # address
   _newStableCompounder: Bytes! # address
