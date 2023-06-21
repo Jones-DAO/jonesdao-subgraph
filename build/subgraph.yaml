@@ -50,6 +50,7 @@ dataSources:
           handler: handleDepositGlp
         - event: DepositStables(indexed address,uint256,uint256,bool)
           handler: handleDepositStables
+          receipt: true
         - event: EmergencyPaused(address)
           handler: handleEmergencyPaused
         - event: EmergencyUnpaused(address)
@@ -144,6 +145,7 @@ dataSources:
           handler: handleDepositGlp
         - event: DepositStables(indexed address,uint256,uint256,bool)
           handler: handleDepositStables
+          receipt: true
         - event: EmergencyPaused(address)
           handler: handleEmergencyPaused
         - event: EmergencyUnpaused(address)

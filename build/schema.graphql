@@ -60,6 +60,8 @@ type DepositStable @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+  usdcAmount: BigInt
+  jUSDCAmount: BigInt
 }
 
 type EmergencyPaused @entity(immutable: true) {
@@ -133,6 +135,7 @@ type RedeemStable @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+  jGlpAmount: String
 }
 
 type RoleAdminChanged @entity(immutable: true) {
@@ -257,6 +260,8 @@ type JonesGlpVaultRouterOldDepositStable @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+  usdcAmount: BigInt
+  jUSDCAmount: BigInt
 }
 
 type JonesGlpVaultRouterOldEmergencyPaused @entity(immutable: true) {
@@ -339,6 +344,7 @@ type JonesGlpVaultRouterOldRedeemStable @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+  jGlpAmount: String
 }
 
 type RetentionCharged @entity(immutable: true) {

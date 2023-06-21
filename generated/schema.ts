@@ -805,6 +805,40 @@ export class DepositStable extends Entity {
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
   }
+
+  get usdcAmount(): BigInt | null {
+    let value = this.get("usdcAmount");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set usdcAmount(value: BigInt | null) {
+    if (!value) {
+      this.unset("usdcAmount");
+    } else {
+      this.set("usdcAmount", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get jUSDCAmount(): BigInt | null {
+    let value = this.get("jUSDCAmount");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set jUSDCAmount(value: BigInt | null) {
+    if (!value) {
+      this.unset("jUSDCAmount");
+    } else {
+      this.set("jUSDCAmount", Value.fromBigInt(<BigInt>value));
+    }
+  }
 }
 
 export class EmergencyPaused extends Entity {
@@ -1715,6 +1749,23 @@ export class RedeemStable extends Entity {
 
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get jGlpAmount(): string | null {
+    let value = this.get("jGlpAmount");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set jGlpAmount(value: string | null) {
+    if (!value) {
+      this.unset("jGlpAmount");
+    } else {
+      this.set("jGlpAmount", Value.fromString(<string>value));
+    }
   }
 }
 
@@ -3283,6 +3334,40 @@ export class JonesGlpVaultRouterOldDepositStable extends Entity {
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
   }
+
+  get usdcAmount(): BigInt | null {
+    let value = this.get("usdcAmount");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set usdcAmount(value: BigInt | null) {
+    if (!value) {
+      this.unset("usdcAmount");
+    } else {
+      this.set("usdcAmount", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get jUSDCAmount(): BigInt | null {
+    let value = this.get("jUSDCAmount");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set jUSDCAmount(value: BigInt | null) {
+    if (!value) {
+      this.unset("jUSDCAmount");
+    } else {
+      this.set("jUSDCAmount", Value.fromBigInt(<BigInt>value));
+    }
+  }
 }
 
 export class JonesGlpVaultRouterOldEmergencyPaused extends Entity {
@@ -4337,6 +4422,23 @@ export class JonesGlpVaultRouterOldRedeemStable extends Entity {
 
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get jGlpAmount(): string | null {
+    let value = this.get("jGlpAmount");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set jGlpAmount(value: string | null) {
+    if (!value) {
+      this.unset("jGlpAmount");
+    } else {
+      this.set("jGlpAmount", Value.fromString(<string>value));
+    }
   }
 }
 

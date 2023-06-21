@@ -1,4 +1,4 @@
-import { Bytes, bigInt, ethereum } from "@graphprotocol/graph-ts";
+import { Bytes, bigInt, ethereum, log } from "@graphprotocol/graph-ts";
 
 import {
   BorrowStables as BorrowStablesEvent,
@@ -80,6 +80,7 @@ import {
 const zapOldHash = "0xee94bf6c";
 const redeemGlpBasketHash = "0x17111779";
 const zapEthOldHash = "0x5e956ef6";
+const depositStableHash = "0xb4efda47";
 
 const transferEventSignature =
   "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
@@ -202,6 +203,37 @@ export function handleDepositStables(event: DepositStablesEvent): void {
   entity.blockTimestamp = event.block.timestamp;
   entity.transactionHash = event.transaction.hash;
 
+  let usdcAmount = bigInt.fromString("0");
+  const fnHash = event.transaction.input.toHexString().slice(0, 10);
+  if ([depositStableHash].includes(fnHash)) {
+    const inputToHex = event.transaction.input.toHexString();
+    const inputWithoutFnHash = inputToHex.slice(10);
+    const input = Bytes.fromHexString(inputWithoutFnHash);
+
+    let decoded = ethereum.decode("(uint256,bool,address)", input)!.toTuple();
+    usdcAmount = decoded[0].toBigInt()
+  }
+  entity.usdcAmount = usdcAmount;
+
+  const eventReceipt = event.receipt;
+  const eventLogs = eventReceipt ? eventReceipt.logs : [];
+
+  let jUSDCAmount = bigInt.fromString("0");
+  const transactionReceiptFiltered = eventLogs.filter((item) =>
+    item.topics[0].toHexString().includes(transferEventSignature)
+  );
+
+  const dataToHex = transactionReceiptFiltered[
+    transactionReceiptFiltered.length - 1
+  ].data.toHexString();
+
+  jUSDCAmount = ethereum
+    .decode("(uint256)", Bytes.fromHexString(dataToHex))!
+    .toTuple()[0]
+    .toBigInt();
+
+  entity.jUSDCAmount = jUSDCAmount;
+
   entity.save();
 }
 
@@ -268,7 +300,7 @@ export function handleRedeemGlp(event: RedeemGlpEvent): void {
   entity._ethRetentions = event.params._ethRetentions;
   entity._compound = event.params._compound;
   entity.blockTimestamp = event.block.timestamp;
-  entity.blockNumber = event.block.number
+  entity.blockNumber = event.block.number;
   entity.transactionHash = event.transaction.hash;
 
   let redeemGlpBasketAddress = "";
