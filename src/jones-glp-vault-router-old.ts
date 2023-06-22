@@ -2,6 +2,7 @@ import { Bytes, bigInt, ethereum, log } from "@graphprotocol/graph-ts";
 
 import {
   BorrowStables as BorrowStablesEvent,
+  CancelStableWithdrawalSignal as CancelStableWithdrawalSignalEvent,
   ClaimRewards as ClaimRewardsEvent,
   CompoundGlp as CompoundGlpEvent,
   CompoundStables as CompoundStablesEvent,
@@ -22,6 +23,7 @@ import {
   SetJonesLeverageStrategy as SetJonesLeverageStrategyEvent,
   SetJonesRewards as SetJonesRewardsEvent,
   SettleEpoch as SettleEpochEvent,
+  StableWithdrawalSignal as StableWithdrawalSignalEvent,
   Unpaused as UnpausedEvent,
   UpdateAdapter as UpdateAdapterEvent,
   UpdateGlpAddress as UpdateGlpAddressEvent,
@@ -40,6 +42,7 @@ import {
 } from "../generated/JonesGlpVaultRouterOld/JonesGlpVaultRouterOld";
 import {
   BorrowStable,
+  CancelStableWithdrawalSignal,
   ClaimReward,
   CompoundGlp,
   CompoundStable,
@@ -60,6 +63,7 @@ import {
   SetJonesLeverageStrategy,
   SetJonesReward,
   SettleEpoch,
+  StableWithdrawalSignal,
   Unpaused,
   UpdateAdapter,
   UpdateGlpAddress,
@@ -91,6 +95,23 @@ export function handleBorrowStables(event: BorrowStablesEvent): void {
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
   entity._amountBorrowed = event.params._amountBorrowed;
+
+  entity.blockNumber = event.block.number;
+  entity.blockTimestamp = event.block.timestamp;
+  entity.transactionHash = event.transaction.hash;
+
+  entity.save();
+}
+
+export function handleCancelStableWithdrawalSignal(
+  event: CancelStableWithdrawalSignalEvent
+): void {
+  let entity = new CancelStableWithdrawalSignal(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  );
+  entity.sender = event.params.sender;
+  entity._shares = event.params._shares;
+  entity._compound = event.params._compound;
 
   entity.blockNumber = event.block.number;
   entity.blockTimestamp = event.block.timestamp;
@@ -191,50 +212,52 @@ export function handleDepositGlp(event: DepositGlpEvent): void {
 }
 
 export function handleDepositStables(event: DepositStablesEvent): void {
-  let entity = new DepositStable(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  );
-  entity._to = event.params._to;
-  entity._amount = event.params._amount;
-  entity._sharesReceived = event.params._sharesReceived;
-  entity._compound = event.params._compound;
-
-  entity.blockNumber = event.block.number;
-  entity.blockTimestamp = event.block.timestamp;
-  entity.transactionHash = event.transaction.hash;
-
-  let usdcAmount = bigInt.fromString("0");
   const fnHash = event.transaction.input.toHexString().slice(0, 10);
   if ([depositStableHash].includes(fnHash)) {
+    let entity = new DepositStable(
+      event.transaction.hash.concatI32(event.logIndex.toI32())
+    );
+    entity._to = event.params._to;
+    entity._amount = event.params._amount;
+    entity._sharesReceived = event.params._sharesReceived;
+    entity._compound = event.params._compound;
+
+    entity.blockNumber = event.block.number;
+    entity.blockTimestamp = event.block.timestamp;
+    entity.transactionHash = event.transaction.hash;
+
+    let usdcAmount = bigInt.fromString("0");
+
     const inputToHex = event.transaction.input.toHexString();
     const inputWithoutFnHash = inputToHex.slice(10);
     const input = Bytes.fromHexString(inputWithoutFnHash);
 
     let decoded = ethereum.decode("(uint256,bool,address)", input)!.toTuple();
-    usdcAmount = decoded[0].toBigInt()
+    usdcAmount = decoded[0].toBigInt();
+
+    entity.usdcAmount = usdcAmount;
+
+    const eventReceipt = event.receipt;
+    const eventLogs = eventReceipt ? eventReceipt.logs : [];
+
+    let jUSDCAmount = bigInt.fromString("0");
+    const transactionReceiptFiltered = eventLogs.filter((item) =>
+      item.topics[0].toHexString().includes(transferEventSignature)
+    );
+
+    const dataToHex = transactionReceiptFiltered[
+      transactionReceiptFiltered.length - 1
+    ].data.toHexString();
+
+    jUSDCAmount = ethereum
+      .decode("(uint256)", Bytes.fromHexString(dataToHex))!
+      .toTuple()[0]
+      .toBigInt();
+
+    entity.jUSDCAmount = jUSDCAmount;
+
+    entity.save();
   }
-  entity.usdcAmount = usdcAmount;
-
-  const eventReceipt = event.receipt;
-  const eventLogs = eventReceipt ? eventReceipt.logs : [];
-
-  let jUSDCAmount = bigInt.fromString("0");
-  const transactionReceiptFiltered = eventLogs.filter((item) =>
-    item.topics[0].toHexString().includes(transferEventSignature)
-  );
-
-  const dataToHex = transactionReceiptFiltered[
-    transactionReceiptFiltered.length - 1
-  ].data.toHexString();
-
-  jUSDCAmount = ethereum
-    .decode("(uint256)", Bytes.fromHexString(dataToHex))!
-    .toTuple()[0]
-    .toBigInt();
-
-  entity.jUSDCAmount = jUSDCAmount;
-
-  entity.save();
 }
 
 export function handleEmergencyPaused(event: EmergencyPausedEvent): void {
@@ -499,6 +522,24 @@ export function handleSettleEpoch(event: SettleEpochEvent): void {
   );
   entity._currentEpochTs = event.params._currentEpochTs;
   entity._targetEpochTs = event.params._targetEpochTs;
+
+  entity.blockNumber = event.block.number;
+  entity.blockTimestamp = event.block.timestamp;
+  entity.transactionHash = event.transaction.hash;
+
+  entity.save();
+}
+
+export function handleStableWithdrawalSignal(
+  event: StableWithdrawalSignalEvent
+): void {
+  let entity = new StableWithdrawalSignal(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  );
+  entity.sender = event.params.sender;
+  entity._shares = event.params._shares;
+  entity._targetEpochTs = event.params._targetEpochTs;
+  entity._compound = event.params._compound;
 
   entity.blockNumber = event.block.number;
   entity.blockTimestamp = event.block.timestamp;

@@ -6,6 +6,16 @@ type BorrowStable @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
+type CancelStableWithdrawalSignal @entity(immutable: true) {
+  id: Bytes!
+  sender: Bytes! # address
+  _shares: BigInt! # uint256
+  _compound: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
 type ClaimReward @entity(immutable: true) {
   id: Bytes!
   _to: Bytes! # address
@@ -168,6 +178,17 @@ type RoleRevoked @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
+type StableWithdrawalSignal @entity(immutable: true) {
+  id: Bytes!
+  sender: Bytes! # address
+  _shares: BigInt! # uint256
+  _targetEpochTs: BigInt! # uint256
+  _compound: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
 type Unpaused @entity(immutable: true) {
   id: Bytes!
   _account: Bytes! # address
@@ -206,6 +227,17 @@ type unCompoundStable @entity(immutable: true) {
 type JonesGlpVaultRouterOldBorrowStable @entity(immutable: true) {
   id: Bytes!
   _amountBorrowed: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type JonesGlpVaultRouterOldCancelStableWithdrawalSignal
+  @entity(immutable: true) {
+  id: Bytes!
+  sender: Bytes! # address
+  _shares: BigInt! # uint256
+  _compound: Boolean! # bool
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -407,6 +439,17 @@ type SettleEpoch @entity(immutable: true) {
   id: Bytes!
   _currentEpochTs: BigInt! # uint256
   _targetEpochTs: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type JonesGlpVaultRouterOldStableWithdrawalSignal @entity(immutable: true) {
+  id: Bytes!
+  sender: Bytes! # address
+  _shares: BigInt! # uint256
+  _targetEpochTs: BigInt! # uint256
+  _compound: Boolean! # bool
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!

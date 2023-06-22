@@ -15,6 +15,7 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - BorrowStables
+        - CancelStableWithdrawalSignal
         - ClaimRewards
         - CompoundGlp
         - CompoundStables
@@ -30,6 +31,7 @@ dataSources:
         - RoleAdminChanged
         - RoleGranted
         - RoleRevoked
+        - StableWithdrawalSignal
         - Unpaused
         - VaultDeposit
         - unCompoundGlp
@@ -40,6 +42,8 @@ dataSources:
       eventHandlers:
         - event: BorrowStables(indexed uint256)
           handler: handleBorrowStables
+        - event: CancelStableWithdrawalSignal(indexed address,uint256,bool)
+          handler: handleCancelStableWithdrawalSignal
         - event: ClaimRewards(indexed address,uint256,uint256,uint256)
           handler: handleClaimRewards
         - event: CompoundGlp(indexed address,uint256)
@@ -72,6 +76,8 @@ dataSources:
           handler: handleRoleGranted
         - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
           handler: handleRoleRevoked
+        - event: StableWithdrawalSignal(indexed address,uint256,indexed uint256,bool)
+          handler: handleStableWithdrawalSignal
         - event: Unpaused(address)
           handler: handleUnpaused
         - event: VaultDeposit(indexed address,uint256,uint256)
@@ -94,6 +100,7 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - JonesGlpVaultRouterOldBorrowStables
+        - JonesGlpVaultRouterOldCancelStableWithdrawalSignal
         - JonesGlpVaultRouterOldClaimRewards
         - JonesGlpVaultRouterOldCompoundGlp
         - JonesGlpVaultRouterOldCompoundStables
@@ -114,6 +121,7 @@ dataSources:
         - SetJonesLeverageStrategy
         - SetJonesRewards
         - SettleEpoch
+        - JonesGlpVaultRouterOldStableWithdrawalSignal
         - JonesGlpVaultRouterOldUnpaused
         - UpdateAdapter
         - UpdateGlpAddress
@@ -135,6 +143,8 @@ dataSources:
       eventHandlers:
         - event: BorrowStables(indexed uint256)
           handler: handleBorrowStables
+        - event: CancelStableWithdrawalSignal(indexed address,uint256,bool)
+          handler: handleCancelStableWithdrawalSignal
         - event: ClaimRewards(indexed address,uint256,uint256,uint256)
           handler: handleClaimRewards
         - event: CompoundGlp(indexed address,uint256)
@@ -177,6 +187,8 @@ dataSources:
           handler: handleSetJonesRewards
         - event: SettleEpoch(uint256,indexed uint256)
           handler: handleSettleEpoch
+        - event: StableWithdrawalSignal(indexed address,uint256,indexed uint256,bool)
+          handler: handleStableWithdrawalSignal
         - event: Unpaused(address)
           handler: handleUnpaused
         - event: UpdateAdapter(address,address)
