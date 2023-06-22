@@ -1,21 +1,18 @@
 {
-    "name": "jonesdao",
-    "license": "UNLICENSED",
-    "scripts": {
-        "codegen": "graph codegen",
-        "build": "graph build",
-        "deploy": "graph deploy --node https://api.thegraph.com/deploy/ olofens/jonesdao",
-        "create-local": "graph create --node http://localhost:8020/ olofens/jonesdao",
-        "remove-local": "graph remove --node http://localhost:8020/ olofens/jonesdao",
-        "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 olofens/jonesdao"
-    },
-    "dependencies": {
-        "@graphprotocol/graph-cli": "0.25.1",
-        "@graphprotocol/graph-ts": "0.24.1",
-        "@protofire/subgraph-toolkit": "0.1.2",
-        "typescript": "^4.6.2"
-    },
-    "prettier": {
-        "printWidth": 100
-    }
+  "name": "jones-jglp",
+  "license": "UNLICENSED",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ jones-dao/jones-jglp",
+    "create-local": "graph create --node http://localhost:8020/ jones-dao/jones-jglp",
+    "remove-local": "graph remove --node http://localhost:8020/ jones-dao/jones-jglp",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 jones-dao/jones-jglp",
+    "test": "graph test"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.51.1",
+    "@graphprotocol/graph-ts": "0.30.0"
+  },
+  "devDependencies": { "matchstick-as": "0.5.0" }
 }

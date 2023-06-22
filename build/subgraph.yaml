@@ -1,6 +1,6 @@
 specVersion: 0.0.5
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum
     name: JonesGlpVaultRouter
@@ -38,7 +38,7 @@ dataSources:
         - unCompoundStables
       abis:
         - name: JonesGlpVaultRouter
-          file: ./abis/JonesGlpVaultRouter.json
+          file: JonesGlpVaultRouter/abis/JonesGlpVaultRouter.json
       eventHandlers:
         - event: BorrowStables(indexed uint256)
           handler: handleBorrowStables
@@ -86,7 +86,7 @@ dataSources:
           handler: handleunCompoundGlp
         - event: unCompoundStables(indexed address,uint256)
           handler: handleunCompoundStables
-      file: ./src/jones-glp-vault-router.ts
+      file: JonesGlpVaultRouter/JonesGlpVaultRouter.wasm
   - kind: ethereum
     name: JonesGlpVaultRouterOld
     network: arbitrum-one
@@ -139,7 +139,7 @@ dataSources:
         - JonesGlpVaultRouterOldunCompoundStables
       abis:
         - name: JonesGlpVaultRouterOld
-          file: ./abis/JonesGlpVaultRouterOld.json
+          file: JonesGlpVaultRouterOld/abis/JonesGlpVaultRouterOld.json
       eventHandlers:
         - event: BorrowStables(indexed uint256)
           handler: handleBorrowStables
@@ -219,4 +219,4 @@ dataSources:
           handler: handleunCompoundGlp
         - event: unCompoundStables(indexed address,uint256)
           handler: handleunCompoundStables
-      file: ./src/jones-glp-vault-router-old.ts
+      file: JonesGlpVaultRouterOld/JonesGlpVaultRouterOld.wasm

@@ -1,0 +1,12 @@
+{
+  "arbitrum-one": {
+    "JonesGlpVaultRouter": {
+      "address": "0x2f43c6475f1ecbd051ce486a9f3ccc4b03f3d713",
+      "startBlock": 55870900
+    },
+    "JonesGlpVaultRouterOld": {
+      "address": "0x01aD96292cdc627307817c428562226fd905AEc2",
+      "startBlock": 55870900
+    }
+  }
+}
